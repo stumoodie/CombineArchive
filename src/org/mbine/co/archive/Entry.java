@@ -5,17 +5,17 @@ public class Entry {
 	private String path;
 	
 	
-	public Entry(String path, String type){
+	Entry(String path, String type){
 		this.path = path;
 		this.type = type;
 	}
 	
-	String getType(){
+	public String getType(){
 		return type; 
 	}
 	
 	
-	String getPath(){
+	public String getPath(){
 		return path;
 	}
 
