@@ -1,0 +1,35 @@
+package org.mbine.co.archive;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
+
+public class ManifestTest {
+	private static final String ORIG_MANIFEST_FILENAME = "orig_manifest.xml";
+	private static final String MANIFEST_FILENAME = "manifest.xml";
+
+	public static void main(String[] args) {
+		try {
+			FileSystem fs = FileSystems.getDefault();
+			Path source = fs.getPath(ORIG_MANIFEST_FILENAME);
+			Path tgt = fs.getPath(MANIFEST_FILENAME);
+			Files.copy(source, tgt, StandardCopyOption.REPLACE_EXISTING);
+			ManifestManager man = new ManifestManager(tgt);
+			man.load();
+			Iterator<String> iter = man.filePathIterator();
+			while(iter.hasNext()){
+				String locn = iter.next();
+				System.out.println("Location=" + locn + ", type=" + man.getFileType(locn));
+			}
+			man.addEntry("foobar.xml", "xml-sbml");
+			man.save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
