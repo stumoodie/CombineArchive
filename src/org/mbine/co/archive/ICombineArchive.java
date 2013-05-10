@@ -7,6 +7,13 @@ import java.util.Iterator;
 
 public interface ICombineArchive extends AutoCloseable {
 	
+	/**
+	 * Also need to add metadata when creating the archive. 
+	 */
+	void addMetadata();
+	
+	Object getMetadata();
+	
 	boolean isValidPath(String fileLocation);
 	
 	Entry createResource(String fileLocation, String fileType);

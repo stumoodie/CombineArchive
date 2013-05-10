@@ -131,4 +131,16 @@ public class CombineArchive implements ICombineArchive {
 		};
 	}
 
+	@Override
+	public void addMetadata() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object getMetadata() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
