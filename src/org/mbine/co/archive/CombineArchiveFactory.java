@@ -40,7 +40,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
  *
  */
 
-public class ArchiveFactory implements IArchiveFactory {
+public class CombineArchiveFactory implements ICombineArchiveFactory {
 	private static final String URI_PREFIX = "jar:file://";
 	private static final String MANIFEST_FILE_NAME = "manifest.xml";
 	private static final String METADATA_FILE_NAME = "metadata.xml";

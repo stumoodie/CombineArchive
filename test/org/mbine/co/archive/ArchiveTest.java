@@ -35,7 +35,7 @@ public class ArchiveTest {
 			Path zipPath = FileSystems.getDefault().getPath("tst.zip")
 					.toAbsolutePath();
 			Files.deleteIfExists(zipPath);
-			ArchiveFactory fact = new ArchiveFactory();
+			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.createArchive(zipPath.toString(), true)) {
 				Path readMePath = FileSystems.getDefault().getPath("readme.txt");
 				Entry entry = arch.createResource(readMePath.toString(), "txt");

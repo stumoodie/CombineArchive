@@ -20,7 +20,7 @@ package org.mbine.co.archive;
  * @author Stuart Moodie
  *
  */
-public interface IArchiveFactory {
+public interface ICombineArchiveFactory {
 	boolean canCreateArchive(String path, boolean createFlag);
 
 	ICombineArchive createArchive(String path, boolean createFlag);
