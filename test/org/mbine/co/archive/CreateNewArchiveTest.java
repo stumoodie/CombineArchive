@@ -37,11 +37,15 @@ public class CreateNewArchiveTest {
 			Files.deleteIfExists(zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.createArchive(zipPath.toString(), true)) {
-				Path readMePath = FileSystems.getDefault().getPath("readme.txt");
-				Entry entry = arch.createResource(readMePath.toString(), "txt");
-				OutputStream writer = arch.writeResource(entry);
-				Files.copy(readMePath, writer);
-				writer.close();
+				Path readMeSrc = FileSystems.getDefault().getPath("readme.txt");
+				String readMeTgt1 = readMeSrc.toString(); 
+				String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 
+				Entry entry1 = arch.createResource(readMeTgt1, "text/plain");
+				OutputStream writer1 = arch.writeResource(entry1);
+				Files.copy(readMeSrc, writer1);
+				writer1.close();
+				arch.createResource(readMeTgt2, "text/plain", readMeSrc);
+				arch.createResource("file", "text/plain");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

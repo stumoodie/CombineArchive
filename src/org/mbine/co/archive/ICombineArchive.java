@@ -31,14 +31,47 @@ import java.util.Iterator;
  */
 public interface ICombineArchive extends AutoCloseable {
 	
+	/**
+	 * Get the meta-data manager. This provides access to the meda-data associated with this archive
+	 * and permits direct manipulation or querying of its associated RDF.
+	 * @return the metadata manager, which cannot be null.
+	 */
 	MetadataManager getMetadata();
 	
-	boolean isValidPath(String fileLocation);
+	/**
+	 * Tests if the given file location can be used to create a new resource in the archive. This tests to see if the 
+	 * file location does not already exist.
+	 * @param fileLocation the location to test.
+	 * @return true if the createResource method will succeed, false otherwise.
+	 */
+	boolean canCreateResource(String fileLocation);
 	
+	/**
+	 * Create a new resource in the archive. It will create an empty resource that can then be populated
+	 * using <code>writeResource</code>. 
+	 * @param fileLocation the location of the resource in the archive. 
+	 * @param fileType the mime type of the resource.
+	 * @return an entry describing the newly created resource.
+	 * @throws IllegalArgumentException if <code>canCreateResource</code> is false.
+	 */
 	Entry createResource(String fileLocation, String fileType);
 
+	
+	/**
+	 * Create a new resource in the archive and then copy the contents of <code>srcFile</code>
+	 * into it.
+	 * @param fileLocation the location of the resource in the archive. 
+	 * @param fileType the mime type of the resource.
+	 * @param srcFile the path of the src to be copied from. Cannot be null.
+	 * @return an entry describing the newly created resource.
+	 * @throws IllegalArgumentException if <code>canCreateResource</code> is false. 
+	 */
 	Entry createResource(String fileLocation, String fileType, Path srcFile);
 
+	/**
+	 * Remove the resource from the archive.
+	 * @param entry
+	 */
 	void removeResource(Entry entry);
 
 	InputStream readResource(Entry resource);

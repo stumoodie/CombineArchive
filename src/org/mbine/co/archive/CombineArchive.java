@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 
@@ -50,9 +52,13 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public Entry createResource(String fileLocation, String fileType) {
+		if(!canCreateResource(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
 		try{
 			Path newResPath = this.fs.getPath(fileLocation);
 			this.manifest.load();
+			if(newResPath.getParent() != null && !Files.exists(newResPath.getParent())){
+				Files.createDirectories(newResPath.getParent());
+			}
 			Files.createFile(newResPath);
 			this.manifest.addEntry(newResPath.toString(), fileType);
 			Entry retVal = new Entry(fileLocation, fileType);
@@ -118,21 +124,30 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public boolean isValidPath(String fileLocation) {
-		Path path = this.fs.getPath(fileLocation);
-		return Files.isWritable(path);
+	public boolean canCreateResource(String fileLocation) {
+		boolean retVal = true;
+		try{
+			if(fileLocation != null){
+				Path testPath = this.fs.getPath(fileLocation);
+				retVal = !Files.exists(testPath);
+			}
+			else{
+				retVal = false;
+			}
+		}
+		catch(InvalidPathException e){
+			retVal = false;
+		}
+		return retVal;
 	}
 
 	@Override
 	public Entry createResource(String fileLocation, String fileType, Path srcFile) {
 		try{
-			Path newResPath = this.fs.getPath(fileLocation);
-			this.manifest.load();
-			Files.copy(srcFile, newResPath);
-			this.manifest.addEntry(newResPath.toString(), fileType);
-			Entry retVal = new Entry(fileLocation, fileType);
-			this.manifest.save();
-			return retVal;
+			Entry entry = this.createResource(fileLocation, fileType);
+			Path zipEntryPath = this.fs.getPath(entry.getPath());
+			Files.copy(srcFile, zipEntryPath, StandardCopyOption.REPLACE_EXISTING);
+			return entry;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
