@@ -22,3 +22,6 @@ Stuart Moodie.
 15 May 2013.
 
 Copyright EMBL-EBI 2013.
+
+
+This code is licensed under Apache V2.0. See LICENSE for more details.
