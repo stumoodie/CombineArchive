@@ -1,18 +1,29 @@
 package org.mbine.co.archive;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 
 public class ArchiveFactory implements IArchiveFactory {
 	private static final String URI_PREFIX = "jar:file://";
 	private static final String MANIFEST_FILE_NAME = "manifest.xml";
+	private static final String METADATA_FILE_NAME = "metadata.xml";
+//	private static final String VCARD_NS = "http://www.w3.org/2006/vcard/ns#";
 	
 	
 	@Override
@@ -32,6 +43,10 @@ public class ArchiveFactory implements IArchiveFactory {
 				Files.createFile(maniPath);
 				man.save();
 			}
+			Path metadataPath = zipFs.getPath(METADATA_FILE_NAME);
+			if(!Files.exists(metadataPath)){
+				createMetadata(metadataPath);
+			}
 			retVal = new CombineArchive(zipFs, man);
 
 			return retVal;
@@ -40,6 +55,22 @@ public class ArchiveFactory implements IArchiveFactory {
 		}
 	}
 
+	private void createMetadata(Path metadataPath) throws IOException{
+		Model mdl = ModelFactory.createDefaultModel();
+		mdl.setNsPrefix("dcterms", DCTerms.NS);
+		
+		Resource docRoot = mdl.createResource("file:///.");
+		Date creationDate = new Date();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SXXX");
+		Resource dateProp = mdl.createResource();
+		docRoot.addProperty(DCTerms.created, dateProp);
+		dateProp.addProperty(DCTerms.date, mdl.createResource().addProperty(DCTerms.created, format.format(creationDate)));
+		docRoot.addProperty(DCTerms.creator, "libCombineArchive");
+		
+		try(OutputStream of = Files.newOutputStream(metadataPath)){
+			mdl.write(of);
+		}
+	}
 
 	@Override
 	public boolean canCreateArchive(String path, boolean createFlag) {

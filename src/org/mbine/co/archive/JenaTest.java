@@ -30,7 +30,7 @@ public class JenaTest {
 		Property nameProp = ResourceFactory.createProperty(VCARD_NS, "Name");
 		Property givenNameProp = ResourceFactory.createProperty(VCARD_NS, "givenName");
 		Property familyNameProp = ResourceFactory.createProperty(VCARD_NS, "familyName");
-		Property additionalNameProp = ResourceFactory.createProperty(VCARD_NS, "additionalName");
+//		Property additionalNameProp = ResourceFactory.createProperty(VCARD_NS, "additionalName");
 		Property emailProp = ResourceFactory.createProperty(VCARD_NS, "Email");
 		
 		Resource johnSmith = mdl.createResource(personURI);

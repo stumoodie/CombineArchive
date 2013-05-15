@@ -40,10 +40,12 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public void removeResource(Entry entry) {
+		if(!this.exists(entry)) throw new IllegalArgumentException("entry must exist: " + entry.getPath());
+
 		Path entryPath = fs.getPath(entry.getPath());
 		try {
 			this.manifest.load();
-			Files.deleteIfExists(entryPath);
+			Files.delete(entryPath);
 			this.manifest.removeEntry(entryPath.toString());
 			this.manifest.save();
 		} catch (IOException e) {
@@ -52,8 +54,10 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public InputStream readResource(Entry resource) {
-		Path entryPath = this.fs.getPath(resource.getPath());
+	public InputStream readResource(Entry entry) {
+		if(!this.exists(entry)) throw new IllegalArgumentException("entry must exist: " + entry.getPath());
+
+		Path entryPath = this.fs.getPath(entry.getPath());
 		InputStream strm = null;
 		try {
 			strm = Files.newInputStream(entryPath, StandardOpenOption.READ);
@@ -64,8 +68,10 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public OutputStream writeResource(Entry resource) {
-		Path entryPath = this.fs.getPath(resource.getPath());
+	public OutputStream writeResource(Entry entry) {
+		if(!this.exists(entry)) throw new IllegalArgumentException("entry must exist: " + entry.getPath());
+		
+		Path entryPath = this.fs.getPath(entry.getPath());
 		OutputStream strm = null;
 		try {
 			strm = Files.newOutputStream(entryPath, StandardOpenOption.WRITE);
@@ -81,8 +87,8 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public boolean exists(Entry resource) {
-		Path rPath = this.fs.getPath(resource.getPath());
+	public boolean exists(Entry entry) {
+		Path rPath = this.fs.getPath(entry.getPath());
 		return Files.exists(rPath);
 	}
 
