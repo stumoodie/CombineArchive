@@ -1,0 +1,9 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/" > 
+  <rdf:Description rdf:about="file:///">
+    <dcterms:modified>2013-05-15T16:46:25.731+01:00</dcterms:modified>
+    <dcterms:created>2013-05-15T16:46:18.834+01:00</dcterms:created>
+    <dcterms:creator>libCombineArchive</dcterms:creator>
+  </rdf:Description>
+</rdf:RDF>

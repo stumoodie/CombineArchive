@@ -65,10 +65,11 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 				man.save();
 			}
 			Path metadataPath = zipFs.getPath(METADATA_FILE_NAME);
+			MetadataManager meta = new MetadataManager(metadataPath);
 			if(!Files.exists(metadataPath)){
 				createMetadata(metadataPath);
 			}
-			retVal = new CombineArchive(zipFs, man);
+			retVal = new CombineArchive(zipFs, man, meta);
 
 			return retVal;
 		} catch (IOException e) {
@@ -80,12 +81,10 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 		Model mdl = ModelFactory.createDefaultModel();
 		mdl.setNsPrefix("dcterms", DCTerms.NS);
 		
-		Resource docRoot = mdl.createResource("file:///.");
+		Resource docRoot = mdl.createResource("file:///");
 		Date creationDate = new Date();
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SXXX");
-		Resource dateProp = mdl.createResource();
-		docRoot.addProperty(DCTerms.created, dateProp);
-		dateProp.addProperty(DCTerms.date, mdl.createResource().addProperty(DCTerms.created, format.format(creationDate)));
+		docRoot.addProperty(DCTerms.created, format.format(creationDate));
 		docRoot.addProperty(DCTerms.creator, "libCombineArchive");
 		
 		try(OutputStream of = Files.newOutputStream(metadataPath)){

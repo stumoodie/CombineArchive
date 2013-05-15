@@ -22,17 +22,16 @@ import java.util.Iterator;
 
 /**
  * 
+ * Defines the interface of the Combine Archive API. The API aims to provide
+ * access to the files in the archive and maintain bookkeeping information so that the Manifest
+ * and the files contents are consistent.
+ * 
  * @author Stuart Moodie
  *
  */
 public interface ICombineArchive extends AutoCloseable {
 	
-	/**
-	 * Also need to add metadata when creating the archive. 
-	 */
-	void addMetadata();
-	
-	Object getMetadata();
+	MetadataManager getMetadata();
 	
 	boolean isValidPath(String fileLocation);
 	

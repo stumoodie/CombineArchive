@@ -25,20 +25,20 @@ import java.nio.file.Path;
  * @author Stuart Moodie
  *
  */
-public class ArchiveTest {
+public class UpdateArchiveTest {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
-			Path zipPath = FileSystems.getDefault().getPath("tst.zip")
-					.toAbsolutePath();
-			Files.deleteIfExists(zipPath);
+			Path srcZipPath = FileSystems.getDefault().getPath("example.zip").toAbsolutePath();
+			Path zipPath = FileSystems.getDefault().getPath("updated_example.zip").toAbsolutePath();
+			Files.copy(srcZipPath, zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.createArchive(zipPath.toString(), true)) {
-				Path readMePath = FileSystems.getDefault().getPath("readme.txt");
-				Entry entry = arch.createResource(readMePath.toString(), "txt");
+				Path readMePath = FileSystems.getDefault().getPath("anotherFile.txt");
+				Entry entry = arch.createResource(readMePath.toString(), "text/plain");
 				OutputStream writer = arch.writeResource(entry);
 				Files.copy(readMePath, writer);
 				writer.close();

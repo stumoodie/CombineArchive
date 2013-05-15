@@ -32,14 +32,19 @@ import java.util.Iterator;
 public class CombineArchive implements ICombineArchive {
 	private final FileSystem fs;
 	private final ManifestManager manifest;
+	private final MetadataManager metadataManager;
 	
-	CombineArchive(FileSystem fs, ManifestManager manMan) {
+	CombineArchive(FileSystem fs, ManifestManager manMan, MetadataManager metaManager) {
 		this.fs = fs;
 		this.manifest = manMan;
+		this.metadataManager = metaManager; 
 	}
 
 	@Override
 	public void close() throws Exception {
+		metadataManager.load();
+		metadataManager.updateModifiedTimestamp();
+		metadataManager.save();
 		fs.close();
 	}
 
@@ -158,15 +163,8 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public void addMetadata() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Object getMetadata() {
-		// TODO Auto-generated method stub
-		return null;
+	public MetadataManager getMetadata() {
+		return this.metadataManager;
 	}
 
 }
