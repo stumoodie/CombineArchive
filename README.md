@@ -1,4 +1,5 @@
-=== Combine Archive ===
+Combine Archive
+===============
 
 This provide an experimental implementation of a Java API to the combine archive.
 
