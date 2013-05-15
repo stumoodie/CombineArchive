@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="buildAll" name="CombineArchive">
+    <property name="target" value="1.7" />
+    <property name="source" value="1.7" />
+    <property name="debuglevel" value="lines,vars,source"/>
+    <property name="build.dir" value="./ant-build" />
+    <property name="build.dir.src" value="${build.dir}/src"/>
+    <property name="build.dir.tests" value="${build.dir}/test"/>
+    <property name="build.dir.doc" value="${build.dir}/doc"/>
+    <property name="src.dir" value="./src" />
+    <property name="test.dir" value="./test" />
+    <property name="libs.dir" value="./libs" />
+    <property name="jar.dir" value="./jars" />
+    <property name="jar.name.bin" value="CombineArchive.jar" />
+    <property name="jar.name.src" value="CombineArchive-src.jar" />
+    <property name="jar.name.doc" value="CombineArchive-docs.jar" />
+
+    <path id="src.classpath">
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/jena-core-2.10.0.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/jcl-over-slf4j-1.6.4.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/log4j-1.2.16.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/slf4j-api-1.6.4.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/slf4j-log4j12-1.6.4.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/xercesImpl-2.10.0.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/xml-apis-1.4.01.jar" />
+        <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/jena-iri-0.9.5.jar" />
+    </path>
+
+    <path id="test.classpath">
+        <path refid="src.classpath" />
+        <pathelement location="${build.dir.src}" />
+        <pathelement location="${build.dir.tests}" />
+    </path>
+    
+    <target name="buildAll" description="builds all code and docs and jars them up" depends="build-project,build-docs,jarAll" />
+    
+    <target name="init">
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.dir.src}" />
+        <mkdir dir="${build.dir.tests}" />
+    	<mkdir dir="${build.dir.doc}"/>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+    
+    <target depends="build-project" name="build" />
+    
+    <target depends="init,build-src,build-test" name="build-project" />
+    
+    <target name="build-src" description="src build with no aspects task" depends="init">
+        <javac classpathref="src.classpath" srcdir="${src.dir}" source="${source}" target="${target}"
+            debug="true" debuglevel="${debuglevel}" destdir="${build.dir.src}" includeantruntime="false">
+        </javac>
+        <copy todir="${build.dir.src}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.java" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target depends="init,build-src" name="build-test">
+        <echo message="${ant.project.name}: ${ant.file}" />
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir.tests}"
+            source="${source}" classpathref="test.classpath" nowarn="false" target="${target}"
+            includeantruntime="false">
+            <src path="${test.dir}" />
+            <classpath refid="test.classpath" />
+            <compilerarg value="-Xlint" />
+        </javac>
+    </target>
+    
+    <target name="jar-bin" depends="build-src,init-jardirs">
+        <jar destfile="${jar.dir}/${jar.name.bin}" basedir="${build.dir.src}">
+        </jar>
+    </target>
+    
+    <target name="build-docs">
+        <javadoc access="package" author="true" splitindex="true" use="true" version="true" source="${source}"
+        	sourcepath="${src.dir}" destdir="${build.dir.doc}" doctitle="Combine Archive API"
+        	nodeprecated="false" nodeprecatedlist="false" noindex="false"
+        	nonavbar="false" notree="false">
+            <classpath refid="src.classpath" />
+        </javadoc>
+    </target>
+    
+    <target name="jarAll" description="creates all jar files for distribution" depends="jar-bin, jar-src, jar-docs"/>
+    
+    <target name="jar-docs" depends="build-docs">
+        <mkdir dir="${jar.dir}" />
+        <jar destfile="${jar.dir}/${jar.name.doc}">
+            <fileset dir="${build.dir.doc}" />
+        </jar>
+    </target>
+    
+    <target name="init-jardirs">
+        <delete dir="${jar.dir}" />
+        <mkdir dir="${jar.dir}" />
+    </target>
+    
+    <target name="jar-src" depends="init-jardirs">
+        <jar destfile="${jar.dir}/${jar.name.src}">
+            <fileset dir="${src.dir}" />
+        </jar>
+    </target>
+    
+</project>

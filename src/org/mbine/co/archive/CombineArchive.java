@@ -43,11 +43,15 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public void close() throws Exception {
-		metadataManager.load();
-		metadataManager.updateModifiedTimestamp();
-		metadataManager.save();
-		fs.close();
+	public void close() {
+		try {
+			metadataManager.load();
+			metadataManager.updateModifiedTimestamp();
+			metadataManager.save();
+			fs.close();
+		} catch (IOException e) {
+			throw new CombineArchiveException(e);
+		}
 	}
 
 	@Override

@@ -36,7 +36,8 @@ public class CreateNewArchiveTest {
 					.toAbsolutePath();
 			Files.deleteIfExists(zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
-			try (ICombineArchive arch = fact.openArchive(zipPath.toString(), true)) {
+			String zipPathStr = zipPath.toString();
+			try (ICombineArchive arch = fact.openArchive(zipPathStr, true)) {
 				Path readMeSrc = FileSystems.getDefault().getPath("readme.txt");
 				String readMeTgt1 = readMeSrc.toString(); 
 				String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 

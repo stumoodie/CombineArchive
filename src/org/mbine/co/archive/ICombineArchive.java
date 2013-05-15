@@ -53,6 +53,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @param fileType the mime type of the artifact.
 	 * @return an entry describing the newly created artifact.
 	 * @throws IllegalArgumentException if <code>canCreateArtifact</code> is false.
+	 * @throws CombineArchiveException if there is an IO error.
 	 */
 	ArtifactInfo createArtifact(String fileLocation, String fileType);
 
@@ -65,6 +66,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @param srcFile the path of the src to be copied from. Cannot be null.
 	 * @return an entry describing the newly created artifact.
 	 * @throws IllegalArgumentException if <code>canCreateArtifact</code> is false. 
+	 * @throws CombineArchiveException if there is an IO error.
 	 */
 	ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile);
 
@@ -72,6 +74,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * Remove the artifact from the archive.
 	 * @param artifactInfo the artifact to remove
 	 * @throws IllegalArgumentException if the artifactInfo does not exist in the archive. 
+	 * @throws CombineArchiveException if there is an IO error.
 	 */
 	void removeArtifact(ArtifactInfo artifactInfo);
 
@@ -80,7 +83,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @param artifactInfo the artifact to be read, which must exist.
 	 * @return the input stream for the artifact.
 	 * @throws IllegalArgumentException if the artifact does not exist.
-	 * @throw CombineArchiveException is there are any IO exceptions while manipulating the archive. 
+	 * @throws CombineArchiveException is there are any IO exceptions while manipulating the archive. 
 	 */
 	InputStream readArtifact(ArtifactInfo artifactInfo);
 
@@ -88,6 +91,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * Opens an output stream that overwrites the contents of the artifact.
 	 * @param artifactInfo the artifact to be written to.
 	 * @return the output stream pointing to the specified artifact.
+	 * @throws CombineArchiveException if there is an IO error.
 	 */
 	OutputStream writeArtifact(ArtifactInfo artifactInfo);
 
@@ -95,6 +99,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * Get the artifact corresponding to the path of the artifact in the archive.
 	 * @param path the location of the artifact in the archive.
 	 * @return the artifact info about the identified artifact or null if no artifact can be found at the location. 
+	 * @throws CombineArchiveException if there is an IO error.
 	 */
 	ArtifactInfo getArtifact(String path);
 	
@@ -111,4 +116,10 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @return The iterator, which can be empty, but NOT null.
 	 */
 	Iterator<ArtifactInfo> artifactIterator();
+	
+	/**
+	 * Closes the archive.
+	 * @throws CombineArchiveException if there is an IO error.
+	 */
+	void close();
 }
