@@ -40,12 +40,12 @@ public class CreateNewArchiveTest {
 				Path readMeSrc = FileSystems.getDefault().getPath("readme.txt");
 				String readMeTgt1 = readMeSrc.toString(); 
 				String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 
-				Entry entry1 = arch.createResource(readMeTgt1, "text/plain");
-				OutputStream writer1 = arch.writeResource(entry1);
+				ArtefactInfo entry1 = arch.createArtefact(readMeTgt1, "text/plain");
+				OutputStream writer1 = arch.writeArtefact(entry1);
 				Files.copy(readMeSrc, writer1);
 				writer1.close();
-				arch.createResource(readMeTgt2, "text/plain", readMeSrc);
-				arch.createResource("file", "text/plain");
+				arch.createArtefact(readMeTgt2, "text/plain", readMeSrc);
+				arch.createArtefact("file", "text/plain");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

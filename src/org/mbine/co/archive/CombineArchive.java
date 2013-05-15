@@ -51,8 +51,8 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public Entry createResource(String fileLocation, String fileType) {
-		if(!canCreateResource(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
+	public ArtefactInfo createArtefact(String fileLocation, String fileType) {
+		if(!canCreateArtefact(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
 		try{
 			Path newResPath = this.fs.getPath(fileLocation);
 			this.manifest.load();
@@ -61,7 +61,7 @@ public class CombineArchive implements ICombineArchive {
 			}
 			Files.createFile(newResPath);
 			this.manifest.addEntry(newResPath.toString(), fileType);
-			Entry retVal = new Entry(fileLocation, fileType);
+			ArtefactInfo retVal = new ArtefactInfo(fileLocation, fileType);
 			this.manifest.save();
 			return retVal;
 		} catch (IOException e) {
@@ -70,10 +70,10 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public void removeResource(Entry entry) {
-		if(!this.exists(entry)) throw new IllegalArgumentException("entry must exist: " + entry.getPath());
+	public void removeArtefact(ArtefactInfo artefactInfo) {
+		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 
-		Path entryPath = fs.getPath(entry.getPath());
+		Path entryPath = fs.getPath(artefactInfo.getPath());
 		try {
 			this.manifest.load();
 			Files.delete(entryPath);
@@ -85,10 +85,10 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public InputStream readResource(Entry entry) {
-		if(!this.exists(entry)) throw new IllegalArgumentException("entry must exist: " + entry.getPath());
+	public InputStream readArtefact(ArtefactInfo artefactInfo) {
+		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 
-		Path entryPath = this.fs.getPath(entry.getPath());
+		Path entryPath = this.fs.getPath(artefactInfo.getPath());
 		InputStream strm = null;
 		try {
 			strm = Files.newInputStream(entryPath, StandardOpenOption.READ);
@@ -99,10 +99,10 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public OutputStream writeResource(Entry entry) {
-		if(!this.exists(entry)) throw new IllegalArgumentException("entry must exist: " + entry.getPath());
+	public OutputStream writeArtefact(ArtefactInfo artefactInfo) {
+		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 		
-		Path entryPath = this.fs.getPath(entry.getPath());
+		Path entryPath = this.fs.getPath(artefactInfo.getPath());
 		OutputStream strm = null;
 		try {
 			strm = Files.newOutputStream(entryPath, StandardOpenOption.WRITE);
@@ -113,18 +113,18 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public Entry getEntry(String path) {
+	public ArtefactInfo getArtefact(String path) {
 		return null;
 	}
 
 	@Override
-	public boolean exists(Entry entry) {
-		Path rPath = this.fs.getPath(entry.getPath());
+	public boolean exists(ArtefactInfo artefactInfo) {
+		Path rPath = this.fs.getPath(artefactInfo.getPath());
 		return Files.exists(rPath);
 	}
 
 	@Override
-	public boolean canCreateResource(String fileLocation) {
+	public boolean canCreateArtefact(String fileLocation) {
 		boolean retVal = true;
 		try{
 			if(fileLocation != null){
@@ -142,21 +142,21 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public Entry createResource(String fileLocation, String fileType, Path srcFile) {
+	public ArtefactInfo createArtefact(String fileLocation, String fileType, Path srcFile) {
 		try{
-			Entry entry = this.createResource(fileLocation, fileType);
-			Path zipEntryPath = this.fs.getPath(entry.getPath());
+			ArtefactInfo artInfo = this.createArtefact(fileLocation, fileType);
+			Path zipEntryPath = this.fs.getPath(artInfo.getPath());
 			Files.copy(srcFile, zipEntryPath, StandardCopyOption.REPLACE_EXISTING);
-			return entry;
+			return artInfo;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public Iterator<Entry> entryIterator() {
+	public Iterator<ArtefactInfo> artefactIterator() {
 		final Iterator<String> pathIter = this.manifest.filePathIterator();
-		return new Iterator<Entry>(){
+		return new Iterator<ArtefactInfo>(){
 
 			@Override
 			public boolean hasNext() {
@@ -164,9 +164,9 @@ public class CombineArchive implements ICombineArchive {
 			}
 
 			@Override
-			public Entry next() {
+			public ArtefactInfo next() {
 				String path = pathIter.next();
-				return new Entry(path, manifest.getFileType(path));
+				return new ArtefactInfo(path, manifest.getFileType(path));
 			}
 
 			@Override

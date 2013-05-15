@@ -38,8 +38,8 @@ public class UpdateArchiveTest {
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.createArchive(zipPath.toString(), true)) {
 				Path readMePath = FileSystems.getDefault().getPath("anotherFile.txt");
-				Entry entry = arch.createResource(readMePath.toString(), "text/plain");
-				OutputStream writer = arch.writeResource(entry);
+				ArtefactInfo entry = arch.createArtefact(readMePath.toString(), "text/plain");
+				OutputStream writer = arch.writeArtefact(entry);
 				Files.copy(readMePath, writer);
 				writer.close();
 			} catch (Exception e) {

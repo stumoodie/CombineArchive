@@ -21,12 +21,12 @@ package org.mbine.co.archive;
  * @author Stuart Moodie
  *
  */
-public class Entry {
+public final class ArtefactInfo {
 	private String type;
 	private String path;
 	
 	
-	Entry(String path, String type){
+	ArtefactInfo(String path, String type){
 		this.path = path;
 		this.type = type;
 	}
@@ -63,7 +63,7 @@ public class Entry {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Entry other = (Entry) obj;
+		ArtefactInfo other = (ArtefactInfo) obj;
 		if (path == null) {
 			if (other.path != null)
 				return false;
