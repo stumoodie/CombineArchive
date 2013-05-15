@@ -23,7 +23,7 @@ import java.util.Iterator;
 /**
  * 
  * Defines the interface of the Combine Archive API. The API aims to provide
- * access to the files in the archive and maintain bookkeeping information so that the Manifest
+ * access to the files in the archive and maintain bookeeping information so that the Manifest
  * and the files contents are consistent.
  * 
  * @author Stuart Moodie
@@ -39,48 +39,76 @@ public interface ICombineArchive extends AutoCloseable {
 	MetadataManager getMetadata();
 	
 	/**
-	 * Tests if the given file location can be used to create a new artefact in the archive. This tests to see if the 
+	 * Tests if the given file location can be used to create a new artifact in the archive. This tests to see if the 
 	 * file location does not already exist.
 	 * @param fileLocation the location to test.
-	 * @return true if the createArtefact method will succeed, false otherwise.
+	 * @return true if the createArtifact method will succeed, false otherwise.
 	 */
-	boolean canCreateArtefact(String fileLocation);
+	boolean canCreateArtifact(String fileLocation);
 	
 	/**
-	 * Create a new artefact in the archive. It will create an empty artefact that can then be populated
-	 * using <code>writeArtefact</code>. 
-	 * @param fileLocation the location of the artefact in the archive. 
-	 * @param fileType the mime type of the artefact.
-	 * @return an entry describing the newly created artefact.
-	 * @throws IllegalArgumentException if <code>canCreateArtefact</code> is false.
+	 * Create a new artifact in the archive. It will create an empty artifact that can then be populated
+	 * using <code>writeArtifact</code>. 
+	 * @param fileLocation the location of the artifact in the archive. 
+	 * @param fileType the mime type of the artifact.
+	 * @return an entry describing the newly created artifact.
+	 * @throws IllegalArgumentException if <code>canCreateArtifact</code> is false.
 	 */
-	ArtefactInfo createArtefact(String fileLocation, String fileType);
+	ArtifactInfo createArtifact(String fileLocation, String fileType);
 
 	
 	/**
-	 * Create a new artefact in the archive and then copy the contents of <code>srcFile</code>
+	 * Create a new artifact in the archive and then copy the contents of <code>srcFile</code>
 	 * into it.
-	 * @param fileLocation the location of the artefact in the archive. 
-	 * @param fileType the mime type of the artefact.
+	 * @param fileLocation the location of the artifact in the archive. 
+	 * @param fileType the mime type of the artifact.
 	 * @param srcFile the path of the src to be copied from. Cannot be null.
-	 * @return an entry describing the newly created artefact.
-	 * @throws IllegalArgumentException if <code>canCreateArtefact</code> is false. 
+	 * @return an entry describing the newly created artifact.
+	 * @throws IllegalArgumentException if <code>canCreateArtifact</code> is false. 
 	 */
-	ArtefactInfo createArtefact(String fileLocation, String fileType, Path srcFile);
+	ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile);
 
 	/**
-	 * Remove the artefact from the archive.
-	 * @param entry
+	 * Remove the artifact from the archive.
+	 * @param artifactInfo the artifact to remove
+	 * @throws IllegalArgumentException if the artifactInfo does not exist in the archive. 
 	 */
-	void removeArtefact(ArtefactInfo entry);
+	void removeArtifact(ArtifactInfo artifactInfo);
 
-	InputStream readArtefact(ArtefactInfo artefactInfo);
+	/**
+	 * Opens an input stream to allow the contents of the artifact to be read.
+	 * @param artifactInfo the artifact to be read, which must exist.
+	 * @return the input stream for the artifact.
+	 * @throws IllegalArgumentException if the artifact does not exist.
+	 * @throw CombineArchiveException is there are any IO exceptions while manipulating the archive. 
+	 */
+	InputStream readArtifact(ArtifactInfo artifactInfo);
 
-	OutputStream writeArtefact(ArtefactInfo artefactInfo);
+	/**
+	 * Opens an output stream that overwrites the contents of the artifact.
+	 * @param artifactInfo the artifact to be written to.
+	 * @return the output stream pointing to the specified artifact.
+	 */
+	OutputStream writeArtifact(ArtifactInfo artifactInfo);
 
-	ArtefactInfo getArtefact(String path);
+	/**
+	 * Get the artifact corresponding to the path of the artifact in the archive.
+	 * @param path the location of the artifact in the archive.
+	 * @return the artifact info about the identified artifact or null if no artifact can be found at the location. 
+	 */
+	ArtifactInfo getArtifact(String path);
 	
-	boolean exists(ArtefactInfo artefactInfo);
+	/**
+	 * Tests if the artifact exists within the archive.
+	 * @param artifactInfo the information identifying the artifact.
+	 * @return true if artifact corresponding to the artifactIfo exists in the archive, false otherwise.  
+	 */
+	boolean exists(ArtifactInfo artifactInfo);
 	
-	Iterator<ArtefactInfo> artefactIterator();
+	/**
+	 * An iterator iterating over the artifacts in the archive and providing an ArtifactInfo for each one. Note that
+	 * the manifest and metadata files are not excluded from this iterator. 
+	 * @return The iterator, which can be empty, but NOT null.
+	 */
+	Iterator<ArtifactInfo> artifactIterator();
 }

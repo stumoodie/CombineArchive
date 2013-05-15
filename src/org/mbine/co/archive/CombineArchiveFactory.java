@@ -48,7 +48,7 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 	
 	
 	@Override
-	public ICombineArchive createArchive(String path, boolean createFlag) {
+	public ICombineArchive openArchive(String path, boolean createFlag) {
 		try{
 			Map<String, String> env = new HashMap<>();
 			env.put("create", Boolean.toString(createFlag));
@@ -93,7 +93,7 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 	}
 
 	@Override
-	public boolean canCreateArchive(String path, boolean createFlag) {
+	public boolean canOpenArchive(String path, boolean createFlag) {
 		Path zipLocn = Paths.get(path);
 		return Files.isRegularFile(zipLocn) && Files.isReadable(zipLocn) && Files.isWritable(zipLocn);
 	}

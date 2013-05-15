@@ -36,16 +36,16 @@ public class CreateNewArchiveTest {
 					.toAbsolutePath();
 			Files.deleteIfExists(zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
-			try (ICombineArchive arch = fact.createArchive(zipPath.toString(), true)) {
+			try (ICombineArchive arch = fact.openArchive(zipPath.toString(), true)) {
 				Path readMeSrc = FileSystems.getDefault().getPath("readme.txt");
 				String readMeTgt1 = readMeSrc.toString(); 
 				String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 
-				ArtefactInfo entry1 = arch.createArtefact(readMeTgt1, "text/plain");
-				OutputStream writer1 = arch.writeArtefact(entry1);
+				ArtifactInfo entry1 = arch.createArtifact(readMeTgt1, "text/plain");
+				OutputStream writer1 = arch.writeArtifact(entry1);
 				Files.copy(readMeSrc, writer1);
 				writer1.close();
-				arch.createArtefact(readMeTgt2, "text/plain", readMeSrc);
-				arch.createArtefact("file", "text/plain");
+				arch.createArtifact(readMeTgt2, "text/plain", readMeSrc);
+				arch.createArtifact("file", "text/plain");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

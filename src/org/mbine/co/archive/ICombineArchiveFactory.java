@@ -21,7 +21,22 @@ package org.mbine.co.archive;
  *
  */
 public interface ICombineArchiveFactory {
-	boolean canCreateArchive(String path, boolean createFlag);
+	
+	/**
+	 * Tests whether an archive can be opened with the given path and creation flag. 
+	 * @param path the path to use for the archive.
+	 * @param createFlag When set to true a new archive would be created if the files does not exist, otherwise the 
+	 * 			archive file must exists. It does not test if the file contains a valid archive. 
+	 * @return true is the archive can be opened, false otherwise.
+	 */
+	boolean canOpenArchive(String path, boolean createFlag);
 
-	ICombineArchive createArchive(String path, boolean createFlag);
+	/**
+	 * Opens an archive with the given path and creation flag. 
+	 * @param path the file location of the the archive.
+	 * @param createFlag When set to true a new archive will be created if the file does not exist, otherwise the 
+	 * 			archive file must exists. 
+	 * @return A instance of ICombineArchive.
+	 */
+	ICombineArchive openArchive(String path, boolean createFlag);
 }

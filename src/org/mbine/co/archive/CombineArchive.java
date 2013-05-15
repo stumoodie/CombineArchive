@@ -51,8 +51,8 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public ArtefactInfo createArtefact(String fileLocation, String fileType) {
-		if(!canCreateArtefact(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
+	public ArtifactInfo createArtifact(String fileLocation, String fileType) {
+		if(!canCreateArtifact(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
 		try{
 			Path newResPath = this.fs.getPath(fileLocation);
 			this.manifest.load();
@@ -61,7 +61,7 @@ public class CombineArchive implements ICombineArchive {
 			}
 			Files.createFile(newResPath);
 			this.manifest.addEntry(newResPath.toString(), fileType);
-			ArtefactInfo retVal = new ArtefactInfo(fileLocation, fileType);
+			ArtifactInfo retVal = new ArtifactInfo(fileLocation, fileType);
 			this.manifest.save();
 			return retVal;
 		} catch (IOException e) {
@@ -70,7 +70,7 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public void removeArtefact(ArtefactInfo artefactInfo) {
+	public void removeArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 
 		Path entryPath = fs.getPath(artefactInfo.getPath());
@@ -85,7 +85,7 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public InputStream readArtefact(ArtefactInfo artefactInfo) {
+	public InputStream readArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 
 		Path entryPath = this.fs.getPath(artefactInfo.getPath());
@@ -99,7 +99,7 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public OutputStream writeArtefact(ArtefactInfo artefactInfo) {
+	public OutputStream writeArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 		
 		Path entryPath = this.fs.getPath(artefactInfo.getPath());
@@ -113,18 +113,18 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public ArtefactInfo getArtefact(String path) {
+	public ArtifactInfo getArtifact(String path) {
 		return null;
 	}
 
 	@Override
-	public boolean exists(ArtefactInfo artefactInfo) {
+	public boolean exists(ArtifactInfo artefactInfo) {
 		Path rPath = this.fs.getPath(artefactInfo.getPath());
 		return Files.exists(rPath);
 	}
 
 	@Override
-	public boolean canCreateArtefact(String fileLocation) {
+	public boolean canCreateArtifact(String fileLocation) {
 		boolean retVal = true;
 		try{
 			if(fileLocation != null){
@@ -142,9 +142,9 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public ArtefactInfo createArtefact(String fileLocation, String fileType, Path srcFile) {
+	public ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile) {
 		try{
-			ArtefactInfo artInfo = this.createArtefact(fileLocation, fileType);
+			ArtifactInfo artInfo = this.createArtifact(fileLocation, fileType);
 			Path zipEntryPath = this.fs.getPath(artInfo.getPath());
 			Files.copy(srcFile, zipEntryPath, StandardCopyOption.REPLACE_EXISTING);
 			return artInfo;
@@ -154,9 +154,9 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public Iterator<ArtefactInfo> artefactIterator() {
+	public Iterator<ArtifactInfo> artifactIterator() {
 		final Iterator<String> pathIter = this.manifest.filePathIterator();
-		return new Iterator<ArtefactInfo>(){
+		return new Iterator<ArtifactInfo>(){
 
 			@Override
 			public boolean hasNext() {
@@ -164,9 +164,9 @@ public class CombineArchive implements ICombineArchive {
 			}
 
 			@Override
-			public ArtefactInfo next() {
+			public ArtifactInfo next() {
 				String path = pathIter.next();
-				return new ArtefactInfo(path, manifest.getFileType(path));
+				return new ArtifactInfo(path, manifest.getFileType(path));
 			}
 
 			@Override

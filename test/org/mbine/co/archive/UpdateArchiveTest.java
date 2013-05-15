@@ -36,10 +36,10 @@ public class UpdateArchiveTest {
 			Path zipPath = FileSystems.getDefault().getPath("updated_example.zip").toAbsolutePath();
 			Files.copy(srcZipPath, zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
-			try (ICombineArchive arch = fact.createArchive(zipPath.toString(), true)) {
+			try (ICombineArchive arch = fact.openArchive(zipPath.toString(), true)) {
 				Path readMePath = FileSystems.getDefault().getPath("anotherFile.txt");
-				ArtefactInfo entry = arch.createArtefact(readMePath.toString(), "text/plain");
-				OutputStream writer = arch.writeArtefact(entry);
+				ArtifactInfo entry = arch.createArtifact(readMePath.toString(), "text/plain");
+				OutputStream writer = arch.writeArtifact(entry);
 				Files.copy(readMePath, writer);
 				writer.close();
 			} catch (Exception e) {
