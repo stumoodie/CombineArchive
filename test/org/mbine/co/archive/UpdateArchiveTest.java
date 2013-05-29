@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * 
@@ -26,18 +27,21 @@ import java.nio.file.Path;
  *
  */
 public class UpdateArchiveTest {
+	private static final String EG1_PREFIX = "example_files/example1_test";
+	private static final String EG2_PREFIX = "example_files/example2_test";
+	private static final String EG2_ZIP = EG2_PREFIX + "/test_files";
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
-			Path srcZipPath = FileSystems.getDefault().getPath("example.zip").toAbsolutePath();
+			Path srcZipPath = FileSystems.getDefault().getPath(EG1_PREFIX, "example.zip").toAbsolutePath();
 			Path zipPath = FileSystems.getDefault().getPath("updated_example.zip").toAbsolutePath();
-			Files.copy(srcZipPath, zipPath);
+			Files.copy(srcZipPath, zipPath, StandardCopyOption.REPLACE_EXISTING);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.openArchive(zipPath.toString(), true)) {
-				Path readMePath = FileSystems.getDefault().getPath("anotherFile.txt");
+				Path readMePath = FileSystems.getDefault().getPath(EG2_ZIP, "anotherFile.txt");
 				ArtifactInfo entry = arch.createArtifact(readMePath.toString(), "text/plain");
 				OutputStream writer = arch.writeArtifact(entry);
 				Files.copy(readMePath, writer);

@@ -43,7 +43,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 public class CombineArchiveFactory implements ICombineArchiveFactory {
 	private static final String URI_PREFIX = "jar:file://";
 	private static final String MANIFEST_FILE_NAME = "manifest.xml";
-	private static final String METADATA_FILE_NAME = "metadata.xml";
+	private static final String METADATA_FILE_NAME = "metadata.rdf";
 //	private static final String VCARD_NS = "http://www.w3.org/2006/vcard/ns#";
 	
 	
@@ -61,13 +61,23 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 			Path maniPath = zipFs.getPath(MANIFEST_FILE_NAME);
 			ManifestManager man = new ManifestManager(maniPath);
 			if(!Files.exists(maniPath)){
-				Files.createFile(maniPath);
-				man.save();
+				if(createFlag){
+					Files.createFile(maniPath);
+					man.save();
+				}
+			}
+			else{
+				man.load();
 			}
 			Path metadataPath = zipFs.getPath(METADATA_FILE_NAME);
 			MetadataManager meta = new MetadataManager(metadataPath);
 			if(!Files.exists(metadataPath)){
-				createMetadata(metadataPath);
+				if(createFlag){
+					createMetadata(metadataPath);
+				}
+			}
+			else{
+				meta.load();
 			}
 			retVal = new CombineArchive(zipFs, man, meta);
 

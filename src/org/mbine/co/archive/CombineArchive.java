@@ -21,10 +21,13 @@ import java.io.OutputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 
@@ -32,6 +35,8 @@ import java.util.Iterator;
  *
  */
 public class CombineArchive implements ICombineArchive {
+	private static final String METADATA = "metadata.rdf";
+	private static final String MANIFEST = "manifest.xml";
 	private final FileSystem fs;
 	private final ManifestManager manifest;
 	private final MetadataManager metadataManager;
@@ -58,7 +63,7 @@ public class CombineArchive implements ICombineArchive {
 	public ArtifactInfo createArtifact(String fileLocation, String fileType) {
 		if(!canCreateArtifact(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
 		try{
-			Path newResPath = this.fs.getPath(fileLocation);
+			Path newResPath = getPath(fileLocation);
 			this.manifest.load();
 			if(newResPath.getParent() != null && !Files.exists(newResPath.getParent())){
 				Files.createDirectories(newResPath.getParent());
@@ -77,7 +82,7 @@ public class CombineArchive implements ICombineArchive {
 	public void removeArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 
-		Path entryPath = fs.getPath(artefactInfo.getPath());
+		Path entryPath = fs.getPath(artefactInfo.getPath()).toAbsolutePath();
 		try {
 			this.manifest.load();
 			Files.delete(entryPath);
@@ -92,7 +97,7 @@ public class CombineArchive implements ICombineArchive {
 	public InputStream readArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 
-		Path entryPath = this.fs.getPath(artefactInfo.getPath());
+		Path entryPath = getPath(artefactInfo.getPath()).toAbsolutePath();
 		InputStream strm = null;
 		try {
 			strm = Files.newInputStream(entryPath, StandardOpenOption.READ);
@@ -106,7 +111,7 @@ public class CombineArchive implements ICombineArchive {
 	public OutputStream writeArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 		
-		Path entryPath = this.fs.getPath(artefactInfo.getPath());
+		Path entryPath = getPath(artefactInfo.getPath()).toAbsolutePath();
 		OutputStream strm = null;
 		try {
 			strm = Files.newOutputStream(entryPath, StandardOpenOption.WRITE);
@@ -123,7 +128,7 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public boolean exists(ArtifactInfo artefactInfo) {
-		Path rPath = this.fs.getPath(artefactInfo.getPath());
+		Path rPath = getPath(artefactInfo.getPath());
 		return Files.exists(rPath);
 	}
 
@@ -132,7 +137,7 @@ public class CombineArchive implements ICombineArchive {
 		boolean retVal = true;
 		try{
 			if(fileLocation != null){
-				Path testPath = this.fs.getPath(fileLocation);
+				Path testPath = getPath(fileLocation);
 				retVal = !Files.exists(testPath);
 			}
 			else{
@@ -149,7 +154,7 @@ public class CombineArchive implements ICombineArchive {
 	public ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile) {
 		try{
 			ArtifactInfo artInfo = this.createArtifact(fileLocation, fileType);
-			Path zipEntryPath = this.fs.getPath(artInfo.getPath());
+			Path zipEntryPath = getPath(artInfo.getPath()).toAbsolutePath();
 			Files.copy(srcFile, zipEntryPath, StandardCopyOption.REPLACE_EXISTING);
 			return artInfo;
 		} catch (IOException e) {
@@ -159,31 +164,31 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public Iterator<ArtifactInfo> artifactIterator() {
-		final Iterator<String> pathIter = this.manifest.filePathIterator();
-		return new Iterator<ArtifactInfo>(){
-
-			@Override
-			public boolean hasNext() {
-				return pathIter.hasNext();
+		List<ArtifactInfo> retVal = new LinkedList<ArtifactInfo>();
+		Iterator<String> pathIter = this.manifest.filePathIterator();
+		while(pathIter.hasNext()){
+			String pathStr = pathIter.next();
+			Path path = this.fs.getPath(pathStr);
+			if(!MANIFEST.equals(pathStr) && !METADATA.equals(pathStr) && Files.exists(path, LinkOption.NOFOLLOW_LINKS)){
+				retVal.add(new ArtifactInfo(pathStr, this.manifest.getFileType(pathStr)));
 			}
-
-			@Override
-			public ArtifactInfo next() {
-				String path = pathIter.next();
-				return new ArtifactInfo(path, manifest.getFileType(path));
-			}
-
-			@Override
-			public void remove() {
-				new UnsupportedOperationException("Removal not supported by this iterator.");
-			}
-			
-		};
+		}
+		return retVal.iterator();
 	}
 
 	@Override
 	public MetadataManager getMetadata() {
 		return this.metadataManager;
 	}
+
+	
+	private Path getPath(String pathStr){
+//		Pattern pat = Pattern.compile("^\\./");
+//		Matcher mat = pat.matcher(pathStr);
+//		pathStr = mat.replaceFirst("");
+		Path retVal = this.fs.getPath(pathStr).toAbsolutePath();
+		return retVal;
+	}
+	
 
 }

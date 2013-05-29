@@ -26,7 +26,9 @@ import java.nio.file.Path;
  *
  */
 public class CreateNewArchiveTest {
-
+	private static String EXAMPLE_PATH="example_files/example1_test/example_zip"; 
+	
+	
 	/**
 	 * @param args
 	 */
@@ -38,8 +40,8 @@ public class CreateNewArchiveTest {
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			String zipPathStr = zipPath.toString();
 			try (ICombineArchive arch = fact.openArchive(zipPathStr, true)) {
-				Path readMeSrc = FileSystems.getDefault().getPath("readme.txt");
-				String readMeTgt1 = readMeSrc.toString(); 
+				Path readMeSrc = FileSystems.getDefault().getPath(EXAMPLE_PATH, "readme.txt");
+				String readMeTgt1 = readMeSrc.getFileName().toString(); 
 				String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 
 				ArtifactInfo entry1 = arch.createArtifact(readMeTgt1, "text/plain");
 				OutputStream writer1 = arch.writeArtifact(entry1);

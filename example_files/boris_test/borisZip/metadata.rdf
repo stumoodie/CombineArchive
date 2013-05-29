@@ -1,0 +1,30 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:vCard="http://www.w3.org/2006/vcard/ns#" > 
+  <rdf:Description rdf:nodeID="A0">
+    <vCard:org rdf:nodeID="A1"/>
+    <vCard:email>fbergman@caltech.edu</vCard:email>
+    <vCard:n rdf:nodeID="A2"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A3">
+    <rdf:_1 rdf:nodeID="A0"/>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A2">
+    <vCard:given-name>Frank</vCard:given-name>
+    <vCard:family-name>Bergmann</vCard:family-name>
+  </rdf:Description>
+  <rdf:Description rdf:about="file:///">
+    <dcterms:modified>2013-05-28T17:50:43.999+01:00</dcterms:modified>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A1">
+    <vCard:organization-name>California Institute of Technology</vCard:organization-name>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A4">
+    <dcterms:W3CDTF>2013-04-04T17:00:00Z</dcterms:W3CDTF>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A5">
+    <dcterms:W3CDTF>2013-04-05T08:50:56Z</dcterms:W3CDTF>
+  </rdf:Description>
+</rdf:RDF>
