@@ -83,6 +83,7 @@ public class ReadArchiveTest {
 				System.out.println("File = " + fName);
 				
 			}
+			zipFs.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -94,21 +95,21 @@ public class ReadArchiveTest {
 	public static void main(String[] args) {
 		try {
 			Path zipPath = FileSystems.getDefault().getPath(BORIS_PREFIX, "Boris.omex").toAbsolutePath();
-//			listZipContents(zipPath);
+			listZipContents(zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.openArchive(zipPath.toString(), false)) {
 				Iterator<ArtifactInfo> iter = arch.artifactIterator();
 				while(iter.hasNext()){
 					ArtifactInfo entry = iter.next();
 					System.out.println(entry.getPath());
-					InputStream reader = arch.readArtifact(entry);
-					BufferedReader r = new BufferedReader(new InputStreamReader(reader));
-					String buf = r.readLine();
-					while(buf != null){
-						System.out.println(buf);
-						buf = r.readLine();
-					}
-					r.close();
+//					InputStream reader = arch.readArtifact(entry);
+//					BufferedReader r = new BufferedReader(new InputStreamReader(reader));
+//					String buf = r.readLine();
+//					while(buf != null){
+//						System.out.println(buf);
+//						buf = r.readLine();
+//					}
+//					r.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
