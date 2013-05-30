@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2006/vcard/ns#">
+   <rdf:Description rdf:about="./BorisEJB.xml">
+      <dcterms:description>original JDesigner model for Kholodenko2000 - MAPK feedback</dcterms:description>
+      <dcterms:created rdf:parseType="Resource">
+         <dcterms:W3CDTF>2013-04-04T19:00:00Z</dcterms:W3CDTF>
+      </dcterms:created>
+      <dcterms:modified rdf:parseType="Resource">
+         <dcterms:W3CDTF>2013-04-05T10:50:56Z</dcterms:W3CDTF>
+      </dcterms:modified>
+   </rdf:Description>
+</rdf:RDF>

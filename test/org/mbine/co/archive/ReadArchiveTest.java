@@ -94,7 +94,9 @@ public class ReadArchiveTest {
 	 */
 	public static void main(String[] args) {
 		try {
-			Path zipPath = FileSystems.getDefault().getPath(BORIS_PREFIX, "Boris.omex").toAbsolutePath();
+//			Path zipPath = FileSystems.getDefault().getPath(BORIS_PREFIX, "Boris.omex").toAbsolutePath();
+//			Path zipPath = FileSystems.getDefault().getPath("/Users/smoodie/tst.zip").toAbsolutePath();
+			Path zipPath = FileSystems.getDefault().getPath(args[0]).toAbsolutePath();
 			listZipContents(zipPath);
 			CombineArchiveFactory fact = new CombineArchiveFactory();
 			try (ICombineArchive arch = fact.openArchive(zipPath.toString(), false)) {
