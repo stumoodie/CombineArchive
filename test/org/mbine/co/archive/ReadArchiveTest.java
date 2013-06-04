@@ -15,10 +15,7 @@
 
 package org.mbine.co.archive;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -38,7 +35,7 @@ import java.util.Map;
  */
 public class ReadArchiveTest {
 	private static final String URI_PREFIX = "jar:file://";
-	private static final String BORIS_PREFIX = "example_files/boris_test";
+//	private static final String BORIS_PREFIX = "example_files/boris_test";
 
 	
 	public static void listZipContents(Path zipLocn){

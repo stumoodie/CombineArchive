@@ -54,13 +54,13 @@ public class ZipDiagnostics {
 		}
 	}
 	
-	private String getByteArray(byte ... byteArr){
-		StringBuilder buf = new StringBuilder();
-		for(byte byteBuf : byteArr){
-			buf.append(String.format("%02X", byteBuf));
-		}
-		return buf.toString();
-	}
+//	private String getByteArray(byte ... byteArr){
+//		StringBuilder buf = new StringBuilder();
+//		for(byte byteBuf : byteArr){
+//			buf.append(String.format("%02X", byteBuf));
+//		}
+//		return buf.toString();
+//	}
 	
 	private void readDirectoryEntry(MappedByteBuffer bb) {
 		final int jumpToFileName = 20; 
