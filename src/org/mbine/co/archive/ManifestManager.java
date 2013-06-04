@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * @author Stuart Moodie
  *
  */
-public class ManifestManager {
+public class ManifestManager implements IManifestManager {
 	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">";
 	private static final String XML_FOOTER = "</omexManifest>\n";
 	private final Path maniPath; 
@@ -51,6 +51,10 @@ public class ManifestManager {
 		this.manifestMap = new HashMap<>();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#load()
+	 */
+	@Override
 	public void load(){
 		try(InputStream in = Files.newInputStream(maniPath, StandardOpenOption.READ)){
 			parseFile(in);
@@ -59,28 +63,52 @@ public class ManifestManager {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#addEntry(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void addEntry(String path, String fileType){
 		this.manifestMap.put(path, fileType);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#removeEntry(java.lang.String)
+	 */
+	@Override
 	public void removeEntry(String path){
 		if(this.manifestMap.remove(path) == null){
 			throw new IllegalArgumentException("Path did not exist in the manifest");
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#hasEntry(java.lang.String)
+	 */
+	@Override
 	public boolean hasEntry(String path){
 		return this.manifestMap.containsKey(path);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#getFileType(java.lang.String)
+	 */
+	@Override
 	public String getFileType(String path){
 		return this.manifestMap.get(path);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#filePathIterator()
+	 */
+	@Override
 	public Iterator<String> filePathIterator(){
 		return this.manifestMap.keySet().iterator();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#save()
+	 */
+	@Override
 	public void save(){
 		try(BufferedWriter out = Files.newBufferedWriter(maniPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE)){
 			writeFile(out);
@@ -115,6 +143,14 @@ public class ManifestManager {
 			String type = child.getAttribute("format");
 			this.manifestMap.put(locn, type);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IManifestManager#numEntries()
+	 */
+	@Override
+	public int numEntries() {
+		return this.manifestMap.size();
 	}
 	
 }

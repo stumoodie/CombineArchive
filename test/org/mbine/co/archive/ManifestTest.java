@@ -38,7 +38,7 @@ public class ManifestTest {
 			Path source = fs.getPath(ORIG_MANIFEST_FILENAME);
 			Path tgt = fs.getPath(MANIFEST_FILENAME);
 			Files.copy(source, tgt, StandardCopyOption.REPLACE_EXISTING);
-			ManifestManager man = new ManifestManager(tgt);
+			IManifestManager man = new ManifestManager(tgt);
 			man.load();
 			Iterator<String> iter = man.filePathIterator();
 			while(iter.hasNext()){

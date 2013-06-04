@@ -38,7 +38,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
  * @author Stuart Moodie
  *
  */
-public class MetadataManager {
+public class MetadataManager implements IMetadataManager {
 	/**
 	 * 
 	 */
@@ -52,6 +52,10 @@ public class MetadataManager {
 		format = new SimpleDateFormat(W3C_DTF_FORMAT);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IMetadataManager#load()
+	 */
+	@Override
 	public void load(){
 		try(InputStream in = Files.newInputStream(metaPath, StandardOpenOption.READ)){
 			model = ModelFactory.createDefaultModel();
@@ -61,6 +65,10 @@ public class MetadataManager {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IMetadataManager#updateModifiedTimestamp()
+	 */
+	@Override
 	public void updateModifiedTimestamp(){
 //		Resource url = 
 //		Selector selector = new SimpleSelector(ResourceFactory.createResource("file:///."), DCTerms.modified, (Object)null);
@@ -79,10 +87,18 @@ public class MetadataManager {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IMetadataManager#getRDFModel()
+	 */
+	@Override
 	public Model getRDFModel(){
 		return this.model;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.IMetadataManager#save()
+	 */
+	@Override
 	public void save(){
 		try(OutputStream of = Files.newOutputStream(metaPath,StandardOpenOption.WRITE)){
 			model.write(of);

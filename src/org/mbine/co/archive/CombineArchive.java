@@ -38,10 +38,10 @@ public class CombineArchive implements ICombineArchive {
 	private static final String METADATA = "metadata.rdf";
 	private static final String MANIFEST = "manifest.xml";
 	private final FileSystem fs;
-	private final ManifestManager manifest;
-	private final MetadataManager metadataManager;
+	private final IManifestManager manifest;
+	private final IMetadataManager metadataManager;
 	
-	CombineArchive(FileSystem fs, ManifestManager manMan, MetadataManager metaManager) {
+	CombineArchive(FileSystem fs, IManifestManager manMan, IMetadataManager metaManager) {
 		this.fs = fs;
 		this.manifest = manMan;
 		this.metadataManager = metaManager; 
@@ -177,7 +177,7 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public MetadataManager getMetadata() {
+	public IMetadataManager getMetadata() {
 		return this.metadataManager;
 	}
 
@@ -188,6 +188,22 @@ public class CombineArchive implements ICombineArchive {
 //		pathStr = mat.replaceFirst("");
 		Path retVal = this.fs.getPath(pathStr).toAbsolutePath();
 		return retVal;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.ICombineArchive#isOpen()
+	 */
+	@Override
+	public boolean isOpen() {
+		return this.fs.isOpen();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.mbine.co.archive.ICombineArchive#numArtifacts()
+	 */
+	@Override
+	public int numArtifacts() {
+		return this.manifest.numEntries();
 	}
 	
 

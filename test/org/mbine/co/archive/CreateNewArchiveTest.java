@@ -15,10 +15,21 @@
 
 package org.mbine.co.archive;
 
+import static org.apache.poi.openxml4j.opc.ZipFileAssert.assertEquals;
+
+import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Set;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * 
@@ -26,35 +37,54 @@ import java.nio.file.Path;
  *
  */
 public class CreateNewArchiveTest {
+	private static final String PSFILE_NAME = "test_sheet.ps";
+	private static final String EXAMPLE_ZIP = "example_files/example1_test/example.zip";
+	private static final String[] IGNORE_FILE_CONTENT = { "metadata.rdf" };
 	private static String EXAMPLE_PATH="example_files/example1_test/example_zip"; 
+	private Path zipPath;	
+	private ICombineArchive arch;
+	
+	@Before
+	public void setUp() throws Exception {
+		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rw-r--r--");
+		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
+		zipPath = Files.createTempFile("zipTest", ".zip", attr);
+//		zipPath = FileSystems.getDefault().getPath("tst.zip");
+		CombineArchiveFactory fact = new CombineArchiveFactory();
+		String zipPathStr = zipPath.toString();
+		Files.delete(zipPath);
+		arch = fact.openArchive(zipPathStr, true);
+	}
 	
 	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			Path zipPath = FileSystems.getDefault().getPath("tst.zip")
-					.toAbsolutePath();
-			Files.deleteIfExists(zipPath);
-			CombineArchiveFactory fact = new CombineArchiveFactory();
-			String zipPathStr = zipPath.toString();
-			try (ICombineArchive arch = fact.openArchive(zipPathStr, true)) {
-				Path readMeSrc = FileSystems.getDefault().getPath(EXAMPLE_PATH, "readme.txt");
-				String readMeTgt1 = readMeSrc.getFileName().toString(); 
-				String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 
-				ArtifactInfo entry1 = arch.createArtifact(readMeTgt1, "text/plain");
-				OutputStream writer1 = arch.writeArtifact(entry1);
-				Files.copy(readMeSrc, writer1);
-				writer1.close();
-				arch.createArtifact(readMeTgt2, "text/plain", readMeSrc);
-				arch.createArtifact("file", "text/plain");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+	@After
+	public void tearDown() throws Exception{
+		if(this.arch.isOpen()){
+			this.arch.close();
 		}
+		this.arch = null;
+		Files.deleteIfExists(zipPath);
 	}
 
+	@Test
+	public void testCreateArtifact() throws Exception {
+		Path readMeSrc = FileSystems.getDefault().getPath(EXAMPLE_PATH, "readme.txt");
+		String readMeTgt1 = readMeSrc.getFileName().toString(); 
+		String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName(); 
+		ArtifactInfo entry1 = arch.createArtifact(readMeTgt1, "text/plain");
+		OutputStream writer1 = arch.writeArtifact(entry1);
+		Files.copy(readMeSrc, writer1);
+		writer1.close();
+		Path psFile = FileSystems.getDefault().getPath(EXAMPLE_PATH, PSFILE_NAME);
+		ArtifactInfo entry2 = arch.createArtifact(PSFILE_NAME, "application/postscript");
+		OutputStream writer2 = arch.writeArtifact(entry2);
+		Files.copy(psFile, writer2);
+		writer2.close();
+		arch.createArtifact(readMeTgt2, "text/plain", readMeSrc);
+		arch.close();
+		assertEquals(zipPath.toFile(), new File(EXAMPLE_ZIP), IGNORE_FILE_CONTENT);
+	}
+
+
+	
 }

@@ -59,7 +59,7 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 			ICombineArchive retVal = null;
 			FileSystem zipFs = FileSystems.newFileSystem(zipUri, env);
 			Path maniPath = zipFs.getPath(MANIFEST_FILE_NAME);
-			ManifestManager man = new ManifestManager(maniPath);
+			IManifestManager man = new ManifestManager(maniPath);
 			if(!Files.exists(maniPath)){
 				if(createFlag){
 					Files.createFile(maniPath);
@@ -70,7 +70,7 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 				man.load();
 			}
 			Path metadataPath = zipFs.getPath(METADATA_FILE_NAME);
-			MetadataManager meta = new MetadataManager(metadataPath);
+			IMetadataManager meta = new MetadataManager(metadataPath);
 			if(!Files.exists(metadataPath)){
 				if(createFlag){
 					createMetadata(metadataPath);

@@ -36,7 +36,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 * and permits direct manipulation or querying of its associated RDF.
 	 * @return the metadata manager, which cannot be null.
 	 */
-	MetadataManager getMetadata();
+	IMetadataManager getMetadata();
 	
 	/**
 	 * Tests if the given file location can be used to create a new artifact in the archive. This tests to see if the 
@@ -122,4 +122,16 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @throws CombineArchiveException if there is an IO error.
 	 */
 	void close();
+
+	/**
+	 * Test if the archive is open.
+	 * @return true if the archive is open, false otherwise.
+	 */
+	boolean isOpen();
+
+	/**
+	 * The number of artifacts in this archive.
+	 * @return The number of artifacts in the archive.
+	 */
+	int numArtifacts();
 }
