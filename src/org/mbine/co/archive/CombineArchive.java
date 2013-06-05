@@ -205,7 +205,8 @@ public class CombineArchive implements ICombineArchive {
 //		Pattern pat = Pattern.compile("^\\./");
 //		Matcher mat = pat.matcher(pathStr);
 //		pathStr = mat.replaceFirst("");
-		Path retVal = this.fs.getPath(pathStr).toAbsolutePath();
+//		Path retVal = this.fs.getPath(pathStr).toAbsolutePath();
+		Path retVal = this.fs.getPath(pathStr);
 		return retVal;
 	}
 
