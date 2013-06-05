@@ -134,4 +134,10 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @return The number of artifacts in the archive.
 	 */
 	int numArtifacts();
+
+	/**
+	 * Tests is the archive has been modified by any of the given operations;
+	 * @return true if it has been modified, false otherwise.
+	 */
+	boolean isModified();
 }

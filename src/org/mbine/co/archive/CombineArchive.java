@@ -40,23 +40,34 @@ public class CombineArchive implements ICombineArchive {
 	private final FileSystem fs;
 	private final IManifestManager manifest;
 	private final IMetadataManager metadataManager;
+	private boolean contentChanged;
 	
 	CombineArchive(FileSystem fs, IManifestManager manMan, IMetadataManager metaManager) {
 		this.fs = fs;
 		this.manifest = manMan;
-		this.metadataManager = metaManager; 
+		this.metadataManager = metaManager;
+		this.contentChanged = false;
 	}
 
 	@Override
 	public void close() {
 		try {
-			metadataManager.load();
-			metadataManager.updateModifiedTimestamp();
-			metadataManager.save();
+			if(contentChanged){
+				metadataManager.load();
+				metadataManager.updateModifiedTimestamp();
+				metadataManager.save();
+			}
 			fs.close();
+			this.contentChanged = false;
 		} catch (IOException e) {
 			throw new CombineArchiveException(e);
 		}
+	}
+	
+	
+	@Override
+	public boolean isModified(){
+		return this.contentChanged;
 	}
 
 	@Override
@@ -72,6 +83,7 @@ public class CombineArchive implements ICombineArchive {
 			this.manifest.addEntry(newResPath.toString(), fileType);
 			ArtifactInfo retVal = new ArtifactInfo(fileLocation, fileType);
 			this.manifest.save();
+			this.contentChanged = true;
 			return retVal;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -88,6 +100,7 @@ public class CombineArchive implements ICombineArchive {
 			Files.delete(entryPath);
 			this.manifest.removeEntry(entryPath.toString());
 			this.manifest.save();
+			this.contentChanged = true;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -111,19 +124,24 @@ public class CombineArchive implements ICombineArchive {
 	public OutputStream writeArtifact(ArtifactInfo artefactInfo) {
 		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
 		
-		Path entryPath = getPath(artefactInfo.getPath()).toAbsolutePath();
-		OutputStream strm = null;
 		try {
+			Path entryPath = getPath(artefactInfo.getPath()).toAbsolutePath();
+			OutputStream strm = null;
 			strm = Files.newOutputStream(entryPath, StandardOpenOption.WRITE);
+			this.contentChanged = true;
+			return strm;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return strm;
 	}
 
 	@Override
 	public ArtifactInfo getArtifact(String path) {
-		return null;
+		ArtifactInfo retVal = null;
+		if(this.manifest.hasEntry(path)){
+			retVal = new ArtifactInfo(path, this.manifest.getFileType(path));
+		}
+		return retVal;
 	}
 
 	@Override
@@ -156,6 +174,7 @@ public class CombineArchive implements ICombineArchive {
 			ArtifactInfo artInfo = this.createArtifact(fileLocation, fileType);
 			Path zipEntryPath = getPath(artInfo.getPath()).toAbsolutePath();
 			Files.copy(srcFile, zipEntryPath, StandardCopyOption.REPLACE_EXISTING);
+			this.contentChanged = true;
 			return artInfo;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
