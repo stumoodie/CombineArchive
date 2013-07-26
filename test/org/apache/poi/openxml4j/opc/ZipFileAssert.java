@@ -67,7 +67,7 @@ public class ZipFileAssert {
 		Set<String> listFile1 = file1.keySet();
 		if (listFile1.size() == file2.keySet().size()) {
 			for (Iterator<String> iter = listFile1.iterator(); iter.hasNext();) {
-				String fileName = (String) iter.next();
+				String fileName = iter.next();
 				if(!ignoredFilesSet.contains(fileName)){
 					// extract the contents for both
 					ByteArrayOutputStream contain2 = file2.get(fileName);
