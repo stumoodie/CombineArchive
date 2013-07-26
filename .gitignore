@@ -1,4 +1,6 @@
 .DS_Store
 bin
 ant-build
+libs/test
+libs/compile
 jars
