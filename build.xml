@@ -31,6 +31,7 @@
         <path refid="src.classpath" />
         <pathelement location="${build.dir.src}" />
         <pathelement location="${build.dir.tests}" />
+        <pathelement location="${libs.dir}/junit/junit-4.10.jar" />
     </path>
     
     <target name="buildAll" description="builds all code and docs and jars them up" depends="build-project,build-docs,jarAll" />
