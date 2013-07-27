@@ -27,21 +27,15 @@
 
     <path id="src.classpath">
         <fileset dir="${libs.dir}/compile" />
-        <!--todo get rid of these 
-            <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/jena-core-2.10.0.jar" />
-            <pathelement location="${libs.dir}/apache-jena-2.10.0/lib/jcl-over-slf4j-1.6.4.jar" />
-        -->
     </path>
 
-        <path id="test.classpath">
-            <path refid="src.classpath" />
-            <fileset dir="${libs.dir}/test" />
-            <pathelement location="${build.dir.src}" />
-            <pathelement location="${build.dir.tests}" />
-    <!--todo get rid of this 
-            <pathelement location="${libs.dir}/junit/junit-4.10.jar" />
-    -->
-        </path>
+    <path id="test.classpath">
+        <path refid="src.classpath" />
+        <fileset dir="${libs.dir}/test" />
+        <pathelement location="${build.dir.src}" />
+        <pathelement location="${build.dir.tests}" />
+    </path>
+
     <target name="buildAll" description="builds all code and docs and jars them up" depends="build-project,build-docs,jarAll" />
 
     <target name="init">
@@ -57,10 +51,6 @@
 
     <target name="clean">
         <delete dir="${build.dir}" />
-    </target>
-
-    <target name="clean-ivy">
-        <delete dir="${deps.dir}" />
     </target>
 
     <target depends="build-project" name="build" />
@@ -123,7 +113,7 @@
         </jar>
     </target>
 
-    <target name="dependency-report" depends="resolve">
+    <target name="dependency-report" depends="resolve" description="provides a report of the project's dependencies.">
         <mkdir dir="${deps.dir}"/>
         <ivy:report todir="${deps.dir}"/>
     </target>
