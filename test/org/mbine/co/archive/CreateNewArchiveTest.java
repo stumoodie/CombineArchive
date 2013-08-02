@@ -40,8 +40,8 @@ public class CreateNewArchiveTest {
 	private static final String PSFILE_NAME = "test_sheet.ps";
 	private static final String EXAMPLE_ZIP = "example_files/example1_test/example.zip";
 	private static final String[] IGNORE_FILE_CONTENT = { "metadata.rdf" };
-	private static String EXAMPLE_PATH="example_files/example1_test/example_zip"; 
-	private Path zipPath;	
+	private static String EXAMPLE_PATH="example_files/example1_test/example_zip";
+	private Path zipPath;
 	private ICombineArchive arch;
 	
 	@Before
@@ -84,7 +84,4 @@ public class CreateNewArchiveTest {
 		arch.close();
 		assertEquals(zipPath.toFile(), new File(EXAMPLE_ZIP), IGNORE_FILE_CONTENT);
 	}
-
-
-	
 }

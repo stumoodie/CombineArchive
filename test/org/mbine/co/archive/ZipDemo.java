@@ -15,6 +15,7 @@
 
 package org.mbine.co.archive;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
@@ -39,8 +40,11 @@ public class ZipDemo {
 	public static void main(String[] args) throws IOException {
 		Map<String, String> env = new HashMap<>();
 		env.put("create", "true");
-		Files.delete(Paths.get("/Users/smoodie/tst.zip"));
-		URI uri = URI.create("jar:file:///Users/smoodie/tst.zip");
+        final String TEST_PATH = new StringBuilder(System.getProperty("user.home")).
+                append(File.separator).append("tst.zip").toString();
+		Files.deleteIfExists(Paths.get(TEST_PATH));
+        final String TEST_URI = new StringBuilder("jar:file://").append(TEST_PATH).toString();
+		URI uri = URI.create(TEST_URI);
 		try(FileSystem fs = FileSystems.newFileSystem(uri, env)){
 				Path file1 = Paths.get(EXAMPLE_PATH, filesToZip[0]);
 				Path zipfile1 = fs.getPath(filesToZip[0]);
