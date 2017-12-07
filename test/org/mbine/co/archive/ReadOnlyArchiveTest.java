@@ -50,8 +50,8 @@ public class ReadOnlyArchiveTest {
 		zipPath = FileSystems.getDefault().getPath(BORIS_PREFIX).toAbsolutePath();
 		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("r--r--r--");
 		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
-		tmpFile = Files.createTempFile("tmp", ".zip", attr);
-//		tmpFile = Files.createTempFile("tmp", ".zip");
+//		tmpFile = Files.createTempFile("tmp", ".zip", attr);
+		tmpFile = Files.createTempFile("tmp", ".zip");
 		Files.copy(zipPath, tmpFile, StandardCopyOption.REPLACE_EXISTING);
 	}
 	

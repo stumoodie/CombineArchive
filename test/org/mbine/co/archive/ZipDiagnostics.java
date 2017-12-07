@@ -68,10 +68,10 @@ public class ZipDiagnostics {
 		twoBuf[0] = bb.get();
 		twoBuf[1] = bb.get();
 //		System.out.println("bytes=" + getByteArray(twoBuf));
-		System.out.println("Version made by. Compatability=" + twoBuf[1] + ", Version=" + twoBuf[0]/10 + "." + twoBuf[0]%10);
+		System.out.println("Version made by. Compatibility=" + twoBuf[1] + ", Version=" + twoBuf[0]/10 + "." + twoBuf[0]%10);
 		bb.get(twoBuf);
 //		System.out.println("bytes=" + getByteArray(twoBuf));
-		System.out.println("Version needed to extract. Compatability=" + twoBuf[1] + ", Version=" + twoBuf[0]/10 + "." + twoBuf[0]%10);
+		System.out.println("Version needed to extract. Compatibility=" + twoBuf[1] + ", Version=" + twoBuf[0]/10 + "." + twoBuf[0]%10);
 		bb.position(bb.position()+jumpToFileName);
 		int  fileLength = bb.getShort();
 		bb.position(bb.position()+16);
