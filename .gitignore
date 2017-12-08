@@ -4,11 +4,10 @@ ant-build
 libs/test
 libs/compile
 jars
-.idea
-*.iml
 *.iws
-*.ipr
 .*
 !.gitignore
+!.project
+!.classpath
 *~
 out
