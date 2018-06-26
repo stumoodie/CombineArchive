@@ -158,7 +158,7 @@ public class ReadArchiveTest {
 
 	private void checkContent(Path tmpFile2, String[] expectedUpdateFiles) throws Exception {
 //		final Set<String> expectedPaths = new TreeSet<String>(Arrays.asList(expectedUpdateFiles)); 
-		String zipFilePath = "jar:file://" + tmpFile2.toString();
+		String zipFilePath = "jar:" + tmpFile2.toUri().toString();
 		Map<String, String> env = new HashMap<>();
 		env.put("create", Boolean.toString(false));
 		FileSystem zipFs = FileSystems.newFileSystem(new URI(zipFilePath), env);

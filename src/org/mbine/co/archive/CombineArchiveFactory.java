@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 EMBL - European Bioinformatics Institute
+ * Copyright 2017 EMBL - European Bioinformatics Institute
  * Licensed under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in
  * compliance with the License.  You may obtain a copy of
@@ -41,7 +41,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
  */
 
 public class CombineArchiveFactory implements ICombineArchiveFactory {
-	private static final String URI_PREFIX = "jar:file://";
+	private static final String JAR_URI_PREFIX = "jar:";
 	private static final String MANIFEST_FILE_NAME = "manifest.xml";
 	private static final String METADATA_FILE_NAME = "metadata.rdf";
 //	private static final String VCARD_NS = "http://www.w3.org/2006/vcard/ns#";
@@ -53,9 +53,7 @@ public class CombineArchiveFactory implements ICombineArchiveFactory {
 			Map<String, String> env = new HashMap<>();
 			env.put("create", Boolean.toString(createFlag));
 			Path zipLocn = Paths.get(path).toAbsolutePath();
-			StringBuilder buf = new StringBuilder(URI_PREFIX);
-			buf.append(zipLocn.toString());
-			URI zipUri = URI.create(buf.toString());
+			URI zipUri = URI.create(JAR_URI_PREFIX + zipLocn.toUri().toString());
 			ICombineArchive retVal = null;
 			FileSystem zipFs = FileSystems.newFileSystem(zipUri, env);
 			Path maniPath = zipFs.getPath(MANIFEST_FILE_NAME);

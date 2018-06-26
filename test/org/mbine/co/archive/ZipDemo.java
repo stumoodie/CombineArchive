@@ -39,8 +39,10 @@ public class ZipDemo {
 	public static void main(String[] args) throws IOException {
 		Map<String, String> env = new HashMap<>();
 		env.put("create", "true");
-		Files.delete(Paths.get("/Users/smoodie/tst.zip"));
-		URI uri = URI.create("jar:file:///Users/smoodie/tst.zip");
+        final URI TEST_PATH = Paths.get(System.getProperty("user.home"), "tst.zip").toUri();
+		Files.deleteIfExists(Paths.get(TEST_PATH));
+        final String TEST_URI = new StringBuilder("jar:").append(TEST_PATH).toString();
+		URI uri = URI.create(TEST_URI);
 		try(FileSystem fs = FileSystems.newFileSystem(uri, env)){
 				Path file1 = Paths.get(EXAMPLE_PATH, filesToZip[0]);
 				Path zipfile1 = fs.getPath(filesToZip[0]);

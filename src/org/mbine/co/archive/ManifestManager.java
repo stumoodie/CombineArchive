@@ -59,7 +59,7 @@ public class ManifestManager implements IManifestManager {
 		try(InputStream in = Files.newInputStream(maniPath, StandardOpenOption.READ)){
 			parseFile(in);
 		} catch (Exception e) {
-			new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class ManifestManager implements IManifestManager {
 		try(BufferedWriter out = Files.newBufferedWriter(maniPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE)){
 			writeFile(out);
 		} catch (Exception e) {
-			new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 	
