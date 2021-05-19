@@ -14,7 +14,7 @@
  */
 
 
-package org.mbine.co.archive;
+package main.java.archive.co.archive;
 
 import java.io.FileInputStream;
 import java.io.IOException;

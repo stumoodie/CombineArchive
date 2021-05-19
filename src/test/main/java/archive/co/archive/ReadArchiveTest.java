@@ -13,7 +13,7 @@
  * under the License.
  */
 
-package org.mbine.co.archive;
+package main.java.archive.co.archive;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -36,6 +36,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.mbine.co.archive.ArtifactInfo;
+import org.mbine.co.archive.CombineArchiveFactory;
+import org.mbine.co.archive.ICombineArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

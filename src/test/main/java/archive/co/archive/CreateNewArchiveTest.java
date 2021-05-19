@@ -13,7 +13,7 @@
  * under the License.
  */
 
-package org.mbine.co.archive;
+package main.java.archive.co.archive;
 
 import static org.apache.poi.openxml4j.opc.ZipFileAssert.assertEquals;
 
@@ -27,6 +27,9 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
+import org.mbine.co.archive.ArtifactInfo;
+import org.mbine.co.archive.CombineArchiveFactory;
+import org.mbine.co.archive.ICombineArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

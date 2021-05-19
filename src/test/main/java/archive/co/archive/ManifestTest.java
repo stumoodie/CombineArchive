@@ -13,7 +13,10 @@
  * under the License.
  */
 
-package org.mbine.co.archive;
+package main.java.archive.co.archive;
+
+import org.mbine.co.archive.IManifestManager;
+import org.mbine.co.archive.ManifestManager;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;

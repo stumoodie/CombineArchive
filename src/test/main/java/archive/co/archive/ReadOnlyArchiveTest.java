@@ -13,7 +13,7 @@
  * under the License.
  */
 
-package org.mbine.co.archive;
+package main.java.archive.co.archive;
 
 import static org.junit.Assert.*;
 
@@ -30,6 +30,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
+import org.mbine.co.archive.CombineArchiveFactory;
+import org.mbine.co.archive.ICombineArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +42,8 @@ import org.junit.Test;
  *
  */
 public class ReadOnlyArchiveTest {
-	private static final String BORIS_PREFIX = "example_files/boris_test/Boris.omex";
+//	private static final String BORIS_PREFIX = "example_files/boris_test/Boris.omex";
+	private static final String BORIS_PREFIX = "example_files/biomd1000/BIOMD0000001000.omex";
 	private Path tmpFile;
 	private Path zipPath;
 
@@ -70,7 +73,7 @@ public class ReadOnlyArchiveTest {
 		arch.close();
 		String expectedChecksum = calcMd5Checksum(zipPath);
 		String actualChecksum = calcMd5Checksum(tmpFile);
-		assertEquals("Files unchanged: md5 checum the same", expectedChecksum, actualChecksum);
+		assertEquals("Files unchanged: md5 checksum the same", expectedChecksum, actualChecksum);
 	}
 
 	private String calcMd5Checksum(Path file){

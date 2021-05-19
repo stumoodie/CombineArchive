@@ -13,7 +13,7 @@
  * under the License.
  */
 
-package org.mbine.co.archive;
+package main.java.archive.co.archive;
 
 import java.io.IOException;
 import java.net.URI;
