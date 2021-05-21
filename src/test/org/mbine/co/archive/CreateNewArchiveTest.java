@@ -13,7 +13,7 @@
  * under the License.
  */
 
-package main.java.archive.co.archive;
+package org.mbine.co.archive;
 
 import static org.apache.poi.openxml4j.opc.ZipFileAssert.assertEquals;
 
