@@ -24,6 +24,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -48,7 +49,8 @@ public class ManifestTest {
 				String locn = iter.next();
 				System.out.println("Location=" + locn + ", type=" + man.getFileType(locn));
 			}
-			man.addEntry("foobar.xml", "xml-sbml");
+			man.addEntry("foobar.xml",
+					new HashMap<String, String>() {{ put("format", "xml-sbml"); put("master", "false"); }});
 			man.save();
 		} catch (IOException e) {
 			e.printStackTrace();

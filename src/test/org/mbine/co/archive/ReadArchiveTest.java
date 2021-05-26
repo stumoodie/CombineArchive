@@ -150,7 +150,7 @@ public class ReadArchiveTest {
 	@Test
 	public void testUpdateArchive() throws Exception{
 		Path readMePath = FileSystems.getDefault().getPath(EG2_ZIP, "anotherFile.txt");
-		ArtifactInfo entry = arch.createArtifact(readMePath.getFileName().toString(), "text/plain");
+		ArtifactInfo entry = arch.createArtifact(readMePath.getFileName().toString(), "text/plain", false);
 		OutputStream writer = arch.writeArtifact(entry);
 		Files.copy(readMePath, writer);
 		writer.close();

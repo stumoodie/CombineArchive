@@ -44,7 +44,7 @@ public class ManifestManager implements IManifestManager {
 	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">";
 	private static final String XML_FOOTER = "</omexManifest>\n";
 	private final Path maniPath; 
-	private final Map<String, String> manifestMap;
+	private final Map<String, Map<String, String>> manifestMap;
 
 	public ManifestManager(Path manifestFile) {
 		this.maniPath = manifestFile;
@@ -56,7 +56,7 @@ public class ManifestManager implements IManifestManager {
 	 */
 	@Override
 	public void load(){
-		try(InputStream in = Files.newInputStream(maniPath, StandardOpenOption.READ)){
+		try (InputStream in = Files.newInputStream(maniPath, StandardOpenOption.READ)) {
 			parseFile(in);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -67,8 +67,8 @@ public class ManifestManager implements IManifestManager {
 	 * @see org.mbine.co.archive.IManifestManager#addEntry(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addEntry(String path, String fileType){
-		this.manifestMap.put(path, fileType);
+	public void addEntry(String path, Map<String, String> data){
+		this.manifestMap.put(path, data);
 	}
 	
 	/* (non-Javadoc)
@@ -76,7 +76,7 @@ public class ManifestManager implements IManifestManager {
 	 */
 	@Override
 	public void removeEntry(String path){
-		if(this.manifestMap.remove(path) == null){
+		if (this.manifestMap.remove(path) == null) {
 			throw new IllegalArgumentException("Path did not exist in the manifest");
 		}
 	}
@@ -94,9 +94,14 @@ public class ManifestManager implements IManifestManager {
 	 */
 	@Override
 	public String getFileType(String path){
-		return this.manifestMap.get(path);
+		return this.manifestMap.get(path).get("format");
 	}
-	
+
+	@Override
+	public boolean isMasterFile(String path) {
+		return Boolean.valueOf(this.manifestMap.get(path).get("master"));
+	}
+
 	/* (non-Javadoc)
 	 * @see org.mbine.co.archive.IManifestManager#filePathIterator()
 	 */
@@ -110,7 +115,7 @@ public class ManifestManager implements IManifestManager {
 	 */
 	@Override
 	public void save(){
-		try(BufferedWriter out = Files.newBufferedWriter(maniPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE)){
+		try (BufferedWriter out = Files.newBufferedWriter(maniPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
 			writeFile(out);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -120,11 +125,13 @@ public class ManifestManager implements IManifestManager {
 	private void writeFile(BufferedWriter out) throws IOException {
 		out.write(XML_HEADER);
 		out.newLine();
-		for(String path : this.manifestMap.keySet()){
+		for (String path : this.manifestMap.keySet()) {
 			out.write("\t<content location=\"");
 			out.write(path);
 			out.write("\" format=\"");
-			out.write(this.manifestMap.get(path));
+			out.write(this.manifestMap.get(path).get("format"));
+			out.write("\" master=\"");
+			out.write(this.manifestMap.get(path).get("master"));
 			out.write("\"/>");
 			out.newLine();
 		}
@@ -141,7 +148,11 @@ public class ManifestManager implements IManifestManager {
 			Element child = (Element)nodeList.item(i);
 			String locn = child.getAttribute("location").trim();
 			String type = child.getAttribute("format");
-			this.manifestMap.put(locn, type);
+			String master = child.getAttribute("master");
+			Map data = new HashMap<String, String>();
+			data.put("format", type);
+			data.put("master", master);
+			this.manifestMap.put(locn, data);
 		}
 	}
 

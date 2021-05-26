@@ -16,6 +16,7 @@
 package org.mbine.co.archive;
 
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Stuart Moodie
@@ -25,13 +26,15 @@ public interface IManifestManager {
 
 	void load();
 
-	void addEntry(String path, String fileType);
+	void addEntry(String path, Map<String, String> data);
 
 	void removeEntry(String path);
 
 	boolean hasEntry(String path);
 
 	String getFileType(String path);
+
+	boolean isMasterFile(String path);
 
 	Iterator<String> filePathIterator();
 

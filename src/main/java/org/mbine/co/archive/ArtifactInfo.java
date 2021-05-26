@@ -17,22 +17,33 @@ package org.mbine.co.archive;
 
 
 /**
- * 
- * @author Stuart Moodie
+ * A template for an artifact included in an archive.
+ * Please see the specification at
+ * <a href="http://co.mbine.org/standards/omex">COMBINE archive format</a>
  *
+ * @author Stuart Moodie
+ * @maintainer <a href="mailto:mglont@pm.me">Mihai Glont</a>
+ * @maintainer <a href="mailto:nvntung@gmail.com">Tung Nguyen</a>
  */
 public final class ArtifactInfo {
-	private String type;
+	// The format attribute
+	private String format;
+	// The location attribute
 	private String path;
+
+	// this attribute indicates whether the artifact is a master file or not.
+	// if it is set true, this file is used first
+	private boolean master;
 	
 	
-	ArtifactInfo(String path, String type){
+	ArtifactInfo(String path, String format, boolean master){
 		this.path = path;
-		this.type = type;
+		this.format = format;
+		this.master = master;
 	}
 	
-	public String getType(){
-		return type; 
+	public String getFormat(){
+		return format;
 	}
 	
 	
@@ -40,6 +51,13 @@ public final class ArtifactInfo {
 		return path;
 	}
 
+	public boolean isMaster() {
+		return master;
+	}
+
+	public void setMaster(boolean master) {
+		this.master = master;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -48,7 +66,7 @@ public final class ArtifactInfo {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((format == null) ? 0 : format.hashCode());
 		return result;
 	}
 
@@ -69,11 +87,18 @@ public final class ArtifactInfo {
 				return false;
 		} else if (!path.equals(other.path))
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (format == null) {
+			if (other.format != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!format.equals(other.format))
 			return false;
+		if (!master) {
+			if (other.master) {
+				return false;
+			}
+		} else if (!other.master) {
+			return false;
+		}
 		return true;
 	}
 
@@ -82,6 +107,6 @@ public final class ArtifactInfo {
 	 */
 	@Override
 	public String toString() {
-		return "ArtifactInfo [type=" + type + ", path=" + path + "]";
+		return "ArtifactInfo [format=" + format + ", path=" + path + ", master=" + master + "]";
 	}
 }

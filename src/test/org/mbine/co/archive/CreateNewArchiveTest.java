@@ -87,16 +87,16 @@ public class CreateNewArchiveTest {
         Path readMeSrc = FileSystems.getDefault().getPath(EXAMPLE_PATH, "readme.txt");
         String readMeTgt1 = readMeSrc.getFileName().toString();
         String readMeTgt2 = "abc/foo/" + readMeSrc.getFileName();
-        ArtifactInfo entry1 = arch.createArtifact(readMeTgt1, "text/plain");
+        ArtifactInfo entry1 = arch.createArtifact(readMeTgt1, "text/plain", true);
         OutputStream writer1 = arch.writeArtifact(entry1);
         Files.copy(readMeSrc, writer1);
         writer1.close();
         Path psFile = FileSystems.getDefault().getPath(EXAMPLE_PATH, PSFILE_NAME);
-        ArtifactInfo entry2 = arch.createArtifact(PSFILE_NAME, "application/postscript");
+        ArtifactInfo entry2 = arch.createArtifact(PSFILE_NAME, "application/postscript", false);
         OutputStream writer2 = arch.writeArtifact(entry2);
         Files.copy(psFile, writer2);
         writer2.close();
-        arch.createArtifact(readMeTgt2, "text/plain", readMeSrc);
+        arch.createArtifact(readMeTgt2, "text/plain", readMeSrc, false);
         arch.close();
         assertEquals(zipPath.toFile(), new File(EXAMPLE_ZIP), IGNORE_FILE_CONTENT);
     }

@@ -51,11 +51,12 @@ public interface ICombineArchive extends AutoCloseable {
 	 * using <code>writeArtifact</code>. 
 	 * @param fileLocation the location of the artifact in the archive. 
 	 * @param fileType the mime type of the artifact.
+	 * @param master indicating whether the artifact is master or not.
 	 * @return an entry describing the newly created artifact.
 	 * @throws IllegalArgumentException if <code>canCreateArtifact</code> is false.
 	 * @throws CombineArchiveException if there is an IO error.
 	 */
-	ArtifactInfo createArtifact(String fileLocation, String fileType);
+	ArtifactInfo createArtifact(String fileLocation, String fileType, boolean master);
 
 	
 	/**
@@ -64,11 +65,12 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @param fileLocation the location of the artifact in the archive. 
 	 * @param fileType the mime type of the artifact.
 	 * @param srcFile the path of the src to be copied from. Cannot be null.
+	 * @param master the boolean flag telling the file is master or not.
 	 * @return an entry describing the newly created artifact.
 	 * @throws IllegalArgumentException if <code>canCreateArtifact</code> is false. 
 	 * @throws CombineArchiveException if there is an IO error.
 	 */
-	ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile);
+	ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile, boolean master);
 
 	/**
 	 * Remove the artifact from the archive.

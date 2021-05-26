@@ -71,17 +71,22 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public ArtifactInfo createArtifact(String fileLocation, String fileType) {
-		if(!canCreateArtifact(fileLocation)) throw new IllegalArgumentException("Invalid file location: " + fileLocation);
-		try{
+	public ArtifactInfo createArtifact(String fileLocation, String fileType, boolean master) {
+		if (!canCreateArtifact(fileLocation)) {
+			throw new IllegalArgumentException("Invalid file location: " + fileLocation);
+		}
+		try {
 			Path newResPath = getPath(fileLocation);
 			this.manifest.load();
 			if(newResPath.getParent() != null && !Files.exists(newResPath.getParent())){
 				Files.createDirectories(newResPath.getParent());
 			}
 			Files.createFile(newResPath);
-			this.manifest.addEntry(newResPath.toString(), fileType);
-			ArtifactInfo retVal = new ArtifactInfo(fileLocation, fileType);
+			Map data = new HashMap<String, String>();
+			data.put("format", fileType);
+			data.put("master", Boolean.toString(master));
+			this.manifest.addEntry(newResPath.toString(), data);
+			ArtifactInfo retVal = new ArtifactInfo(fileLocation, fileType, master);
 			this.manifest.save();
 			this.contentChanged = true;
 			return retVal;
@@ -138,8 +143,8 @@ public class CombineArchive implements ICombineArchive {
 	@Override
 	public ArtifactInfo getArtifact(String path) {
 		ArtifactInfo retVal = null;
-		if(this.manifest.hasEntry(path)){
-			retVal = new ArtifactInfo(path, this.manifest.getFileType(path));
+		if (this.manifest.hasEntry(path)) {
+			retVal = new ArtifactInfo(path, this.manifest.getFileType(path), false);
 		}
 		return retVal;
 	}
@@ -169,9 +174,9 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile) {
+	public ArtifactInfo createArtifact(String fileLocation, String fileType, Path srcFile, boolean master) {
 		try{
-			ArtifactInfo artInfo = this.createArtifact(fileLocation, fileType);
+			ArtifactInfo artInfo = this.createArtifact(fileLocation, fileType, master);
 			Path zipEntryPath = getPath(artInfo.getPath()).toAbsolutePath();
 			Files.copy(srcFile, zipEntryPath, StandardCopyOption.REPLACE_EXISTING);
 			this.contentChanged = true;
@@ -188,8 +193,9 @@ public class CombineArchive implements ICombineArchive {
 		while(pathIter.hasNext()){
 			String pathStr = pathIter.next();
 			Path path = this.fs.getPath(pathStr);
-			if(!MANIFEST.equals(pathStr) && !METADATA.equals(pathStr) && Files.exists(path, LinkOption.NOFOLLOW_LINKS)){
-				retVal.add(new ArtifactInfo(pathStr, this.manifest.getFileType(pathStr)));
+			if (!MANIFEST.equals(pathStr) && !METADATA.equals(pathStr) &&
+				Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+				retVal.add(new ArtifactInfo(pathStr, this.manifest.getFileType(pathStr), false));
 			}
 		}
 		return retVal.iterator();
