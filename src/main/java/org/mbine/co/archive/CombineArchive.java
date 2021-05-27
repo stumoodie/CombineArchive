@@ -196,7 +196,8 @@ public class CombineArchive implements ICombineArchive {
 			}
 			if (!MANIFEST.equals(pathStr) && !METADATA.equals(pathStr) &&
 				Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
-				retVal.add(new ArtifactInfo(pathStr, this.manifest.getFileType(pathStr), false));
+				boolean master = this.manifest.isMasterFile(pathStr);
+				retVal.add(new ArtifactInfo(pathStr, this.manifest.getFileType(pathStr), master));
 			}
 		}
 		return retVal.iterator();
