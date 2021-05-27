@@ -1,8 +1,10 @@
 package org.mbine.co.archive;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,16 +22,17 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@RunWith(JUnitParamsRunner.class)
 public class ExtractArchiveTest {
-   private static final String modelCoV2 = "omex_files/iAB_AMO1410_SARS-CoV-2.omex";
-   private static final String modelBIOMD1000 = "biomd1000/BIOMD0000001000.omex";
+   private static final String MODEL2012220003_OMEX = "omex_files/MODEL2012220003.omex";
+   private static final String BIOMD0000001000_OMEX = "omex_files/BIOMD0000001000.omex";
+   private static final String iAB_AMO1410_SARS_CoV2_OMEX = "omex_files/iAB_AMO1410_SARS-CoV-2.omex";
    private ICombineArchive archive;
    private Path tmpFile;
    private Path zipPath;
 
-   @Before
-   public void setUp() throws Exception {
-      File file = pickTestOmexFile(modelBIOMD1000);
+   public void setUp(final String omexTestFilePath) throws Exception {
+      File file = pickTestOmexFile(omexTestFilePath);
       zipPath = Paths.get(file.toURI());
       Set<PosixFilePermission> perms = PosixFilePermissions.fromString("r--r--r--");
       FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
@@ -50,7 +53,13 @@ public class ExtractArchiveTest {
    }
 
    @Test
-   public void testExtractMasterFile() throws Exception {
+   @Parameters({
+           BIOMD0000001000_OMEX,
+           MODEL2012220003_OMEX,
+           iAB_AMO1410_SARS_CoV2_OMEX
+   })
+   public void testExtractMasterFile(String omexTestFilePath) throws Exception {
+      setUp(omexTestFilePath);
       boolean res = archive.isOpen();
       assertEquals(true, res);
       System.out.println(tmpFile.toAbsolutePath());
