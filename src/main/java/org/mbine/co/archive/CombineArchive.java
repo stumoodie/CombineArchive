@@ -188,11 +188,14 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public Iterator<ArtifactInfo> artifactIterator() {
-		List<ArtifactInfo> retVal = new LinkedList<ArtifactInfo>();
+		List<ArtifactInfo> retVal = new LinkedList<>();
 		Iterator<String> pathIter = this.manifest.filePathIterator();
-		while(pathIter.hasNext()){
+		while (pathIter.hasNext()){
 			String pathStr = pathIter.next();
 			Path path = this.fs.getPath(pathStr);
+			if (pathStr.equals(".")) {
+				continue;
+			}
 			if (!MANIFEST.equals(pathStr) && !METADATA.equals(pathStr) &&
 				Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
 				retVal.add(new ArtifactInfo(pathStr, this.manifest.getFileType(pathStr), false));
