@@ -60,10 +60,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <show>private</show>
-                    <nohelp>true</nohelp>
-                </configuration>
             </plugin>
         </plugins>
     </build>

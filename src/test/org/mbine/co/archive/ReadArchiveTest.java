@@ -15,38 +15,25 @@
 
 package org.mbine.co.archive;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.mbine.co.archive.ArtifactInfo;
-import org.mbine.co.archive.CombineArchiveFactory;
-import org.mbine.co.archive.ICombineArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- * 
- * @author Stuart Moodie
+ * Testing opening archives
  *
+ * @author Stuart Moodie
+ * @author <a href="mailto:nvntung@gmail.com">Tung Nguyen</a>
  */
 public class ReadArchiveTest {
 	private static final String EG1_PREFIX = "example_files/example1_test";
@@ -79,7 +66,7 @@ public class ReadArchiveTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		if(arch != null && arch.isOpen()){
+		if (arch != null && arch.isOpen()) {
 			arch.close();
 		}
 		Files.deleteIfExists(tmpFile);
@@ -134,7 +121,7 @@ public class ReadArchiveTest {
 //			throw new RuntimeException(e);
 //		}
 //	}
-	
+
 	@Test
 	public void testReadArchive(){
 		Set<String> fNames = new TreeSet<String>(Arrays.asList(expectedFiles));

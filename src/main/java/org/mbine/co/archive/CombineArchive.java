@@ -18,16 +18,8 @@ package org.mbine.co.archive;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 
 /**
  * 
@@ -78,7 +70,7 @@ public class CombineArchive implements ICombineArchive {
 		try {
 			Path newResPath = getPath(fileLocation);
 			this.manifest.load();
-			if(newResPath.getParent() != null && !Files.exists(newResPath.getParent())){
+			if (newResPath.getParent() != null && !Files.exists(newResPath.getParent())) {
 				Files.createDirectories(newResPath.getParent());
 			}
 			Files.createFile(newResPath);
@@ -97,7 +89,9 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public void removeArtifact(ArtifactInfo artefactInfo) {
-		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
+		if (!this.exists(artefactInfo)) {
+			throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
+		}
 
 		Path entryPath = fs.getPath(artefactInfo.getPath()).toAbsolutePath();
 		try {
@@ -113,7 +107,9 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public InputStream readArtifact(ArtifactInfo artefactInfo) {
-		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
+		if (!this.exists(artefactInfo)) {
+			throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
+		}
 
 		Path entryPath = getPath(artefactInfo.getPath()).toAbsolutePath();
 		InputStream strm = null;
@@ -127,7 +123,9 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public OutputStream writeArtifact(ArtifactInfo artefactInfo) {
-		if(!this.exists(artefactInfo)) throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
+		if (!this.exists(artefactInfo)) {
+			throw new IllegalArgumentException("entry must exist: " + artefactInfo.getPath());
+		}
 		
 		try {
 			Path entryPath = getPath(artefactInfo.getPath()).toAbsolutePath();

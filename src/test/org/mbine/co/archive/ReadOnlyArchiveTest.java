@@ -15,7 +15,9 @@
 
 package org.mbine.co.archive;
 
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,11 +32,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
-import org.mbine.co.archive.CombineArchiveFactory;
-import org.mbine.co.archive.ICombineArchive;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * 
@@ -58,14 +56,13 @@ public class ReadOnlyArchiveTest {
 		Files.copy(zipPath, tmpFile, StandardCopyOption.REPLACE_EXISTING);
 	}
 	
-	
 	@After
 	public void tearDown() throws Exception {
 		Files.deleteIfExists(tmpFile);
 		tmpFile = null;
 		zipPath = null;
 	}
-	
+
 	@Test
 	public void testArchiveUnmodified(){
 		CombineArchiveFactory fact = new CombineArchiveFactory();
