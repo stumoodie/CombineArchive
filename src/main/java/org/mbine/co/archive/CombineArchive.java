@@ -15,11 +15,15 @@
 
 package org.mbine.co.archive;
 
+import javafx.util.Pair;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * 
@@ -201,6 +205,23 @@ public class CombineArchive implements ICombineArchive {
 			}
 		}
 		return retVal.iterator();
+	}
+
+	@Override
+	public Pair<String, InputStream> getMasterFile() {
+		Iterator<ArtifactInfo> iterator = artifactIterator();
+		boolean foundMasterFile = false;
+		Pair<String, InputStream> tmp = new Pair<>("", null);
+		while (!foundMasterFile && iterator.hasNext()) {
+			ArtifactInfo artifactInfo = iterator.next();
+			foundMasterFile = artifactInfo.isMaster();
+			if (foundMasterFile) {
+				String format = artifactInfo.getFormat();
+				InputStream stream = readArtifact(artifactInfo);
+				tmp = new Pair<>(format, stream);
+			}
+		}
+		return tmp;
 	}
 
 	@Override

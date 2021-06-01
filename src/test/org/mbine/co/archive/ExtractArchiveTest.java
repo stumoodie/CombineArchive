@@ -1,5 +1,6 @@
 package org.mbine.co.archive;
 
+import javafx.util.Pair;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.After;
@@ -81,6 +82,22 @@ public class ExtractArchiveTest {
    }
 
    @Test
+   @Parameters(method = "paramsToTestExtractMasterFile")
+   public void testExtractMasterFile(String omexTestFilePath, boolean hasMasterFile, String format,
+                                     boolean masterFile) throws Exception {
+      setUp(omexTestFilePath);
+      boolean res = archive.isOpen();
+      assertEquals(true, res);
+      boolean hasMaster = archive.hasMasterFile();
+      assertEquals(hasMasterFile, hasMaster);
+      Pair<String, InputStream> detectedMasterFile = archive.getMasterFile();
+      String detectedFormat = detectedMasterFile.getKey();
+      assertEquals(format, detectedFormat);
+      InputStream stream = detectedMasterFile.getValue();
+      assertEquals(masterFile, stream != null);
+   }
+
+   @Test
    @Parameters(method = "paramsToTestFindMasterFile")
    public void testFindMasterFile(String omexTestFilePath, boolean expected) throws Exception {
       setUp(omexTestFilePath);
@@ -90,6 +107,13 @@ public class ExtractArchiveTest {
       assertEquals(hasMaster, expected);
    }
 
+   private Object[] paramsToTestExtractMasterFile() {
+      return new Object[] {
+         new Object[] {BIOMD0000001000_OMEX, false, "", false} /* this OMEX file does not declare a master attribute */,
+         new Object[] {MODEL2012220003_OMEX, true, "https://identifiers.org/combine.specifications/sbml.level-3.version-1", true},
+         new Object[] {iAB_AMO1410_SARS_CoV2_OMEX, true, "https://identifiers.org/combine.specifications/sbml.level-3.version-1", true},
+      };
+   }
    private Object[] paramsToTestFindMasterFile() {
       return new Object[] {
          new Object[] {BIOMD0000001000_OMEX, false},

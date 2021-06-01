@@ -15,6 +15,9 @@
 
 package org.mbine.co.archive;
 
+import javafx.util.Pair;
+
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -30,7 +33,12 @@ import java.util.Iterator;
  *
  */
 public interface ICombineArchive extends AutoCloseable {
-	
+
+	/**
+	 * Get the master file if it is declared in the archive
+	 */
+	Pair<String, InputStream> getMasterFile();
+
 	/**
 	 * Check the archive has a master or not
 	 *
