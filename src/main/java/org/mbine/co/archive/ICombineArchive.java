@@ -18,6 +18,7 @@ package org.mbine.co.archive;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -159,4 +160,9 @@ public interface ICombineArchive extends AutoCloseable {
 	 * @return true if it has been modified, false otherwise.
 	 */
 	boolean isModified();
+
+	/**
+	 * Write the master file to a file
+	 */
+	File writeMasterFile() throws IOException;
 }

@@ -95,6 +95,10 @@ public class ExtractArchiveTest {
       assertEquals(format, detectedFormat);
       InputStream stream = detectedMasterFile.getValue();
       assertEquals(masterFile, stream != null);
+      File file = archive.writeMasterFile();
+      if (file != null) {
+         System.out.println(file.getAbsolutePath());
+      }
    }
 
    @Test
@@ -122,6 +126,9 @@ public class ExtractArchiveTest {
       };
    }
    private static String convertInputStreamToString(InputStream is) throws IOException {
+      if (is == null) {
+         return "";
+      }
       String newLine = System.getProperty("line.separator");
       String result;
       try (Stream<String> lines = new BufferedReader(new InputStreamReader(is)).lines()) {

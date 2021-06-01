@@ -16,11 +16,9 @@
 package org.mbine.co.archive;
 
 import javafx.util.Pair;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -64,6 +62,23 @@ public class CombineArchive implements ICombineArchive {
 	@Override
 	public boolean isModified(){
 		return this.contentChanged;
+	}
+
+	@Override
+	public File writeMasterFile() throws IOException {
+		Pair<String, InputStream> masterFile = getMasterFile();
+		Path tmpFile = Files.createTempFile("master-file", ".omex");
+		if (masterFile.getKey() != "" && masterFile.getValue() != null) {
+			InputStream stream = masterFile.getValue();
+			byte[] buffer = new byte[stream.available()];
+			stream.read(buffer);
+
+			File targetFile = tmpFile.toFile();
+			OutputStream outStream = new FileOutputStream(targetFile);
+			outStream.write(buffer);
+			return targetFile;
+		}
+		return null;
 	}
 
 	@Override
