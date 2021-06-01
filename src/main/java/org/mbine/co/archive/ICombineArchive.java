@@ -32,6 +32,15 @@ import java.util.Iterator;
 public interface ICombineArchive extends AutoCloseable {
 	
 	/**
+	 * Check the archive has a master or not
+	 *
+	 * @return true if the archive has a file declared as the master. Returns false for otherwise.
+	 */
+	default boolean hasMasterFile() {
+		return false;
+	}
+
+	/**
 	 * Get the meta-data manager. This provides access to the meta-data associated with this archive
 	 * and permits direct manipulation or querying of its associated RDF.
 	 * @return the metadata manager, which cannot be null.

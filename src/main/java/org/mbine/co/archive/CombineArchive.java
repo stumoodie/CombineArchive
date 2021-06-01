@@ -204,6 +204,17 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
+	public boolean hasMasterFile() {
+		Iterator<ArtifactInfo> iterator = artifactIterator();
+		boolean foundMasterFile = false;
+		while (!foundMasterFile && iterator.hasNext()) {
+			ArtifactInfo artifactInfo = iterator.next();
+			foundMasterFile = artifactInfo.isMaster();
+		}
+		return foundMasterFile;
+	}
+
+	@Override
 	public IMetadataManager getMetadata() {
 		return this.metadataManager;
 	}

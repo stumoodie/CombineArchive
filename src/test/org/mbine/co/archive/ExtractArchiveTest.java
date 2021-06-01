@@ -58,7 +58,7 @@ public class ExtractArchiveTest {
            MODEL2012220003_OMEX,
            iAB_AMO1410_SARS_CoV2_OMEX
    })
-   public void testExtractMasterFile(String omexTestFilePath) throws Exception {
+   public void testListAllFilesInArchive(String omexTestFilePath) throws Exception {
       setUp(omexTestFilePath);
       boolean res = archive.isOpen();
       assertEquals(true, res);
@@ -80,6 +80,23 @@ public class ExtractArchiveTest {
       }
    }
 
+   @Test
+   @Parameters(method = "paramsToTestFindMasterFile")
+   public void testFindMasterFile(String omexTestFilePath, boolean expected) throws Exception {
+      setUp(omexTestFilePath);
+      boolean res = archive.isOpen();
+      assertEquals(true, res);
+      boolean hasMaster = archive.hasMasterFile();
+      assertEquals(hasMaster, expected);
+   }
+
+   private Object[] paramsToTestFindMasterFile() {
+      return new Object[] {
+         new Object[] {BIOMD0000001000_OMEX, false},
+         new Object[] {MODEL2012220003_OMEX, true},
+         new Object[] {iAB_AMO1410_SARS_CoV2_OMEX, true},
+      };
+   }
    private static String convertInputStreamToString(InputStream is) throws IOException {
       String newLine = System.getProperty("line.separator");
       String result;
