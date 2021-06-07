@@ -22,8 +22,8 @@ package org.mbine.co.archive;
  * <a href="http://co.mbine.org/standards/omex">COMBINE archive format</a>
  *
  * @author Stuart Moodie
- * @maintainer <a href="mailto:mglont@pm.me">Mihai Glont</a>
- * @maintainer <a href="mailto:nvntung@gmail.com">Tung Nguyen</a>
+ * @author <a href="mailto:mglont@pm.me">Mihai Glont</a>
+ * @author <a href="mailto:nvntung@gmail.com">Tung Nguyen</a>
  */
 public final class ArtifactInfo {
 	// The format attribute

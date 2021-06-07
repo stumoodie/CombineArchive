@@ -37,6 +37,8 @@ public interface ICombineArchive extends AutoCloseable {
 
 	/**
 	 * Get the master file if it is declared in the archive
+	 *
+	 * @return A pair of a string as the format and an InputStream object as the content of the master file
 	 */
 	Pair<String, InputStream> getMasterFile();
 
@@ -163,6 +165,9 @@ public interface ICombineArchive extends AutoCloseable {
 
 	/**
 	 * Write the master file to a file
+	 *
+	 * @throws IOException if there are issues when accessing the master file and writing out the file
+	 * @return a File object which is the result of writing the content of the master file into a file
 	 */
 	File writeMasterFile() throws IOException;
 }

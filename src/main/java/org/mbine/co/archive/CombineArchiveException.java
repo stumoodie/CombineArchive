@@ -25,7 +25,7 @@ public class CombineArchiveException extends RuntimeException {
 
 	/**
 	 * Exception with simple message.
-	 * @param message
+	 * @param message A string representing the exception message
 	 */
 	public CombineArchiveException(String message) {
 		super(message);
@@ -33,7 +33,7 @@ public class CombineArchiveException extends RuntimeException {
 
 	/**
 	 * Exception the rethrows another (possible typed) exception.
-	 * @param cause
+	 * @param cause A cause
 	 */
 	public CombineArchiveException(Throwable cause) {
 		super(cause);
@@ -41,8 +41,8 @@ public class CombineArchiveException extends RuntimeException {
 
 	/**
 	 * Exception that provides a message to a rethrown exception.
-	 * @param message
-	 * @param cause
+	 * @param message	A string denoting the exception message
+	 * @param cause	A cause
 	 */
 	public CombineArchiveException(String message, Throwable cause) {
 		super(message, cause);
