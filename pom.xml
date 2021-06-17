@@ -6,7 +6,7 @@
 
     <groupId>org.mbine.co</groupId>
     <artifactId>libCombineArchive</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
