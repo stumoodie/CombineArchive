@@ -3,6 +3,7 @@ package org.mbine.co.archive;
 import javafx.util.Pair;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(JUnitParamsRunner.class)
 public class ExtractArchiveTest {
@@ -84,7 +84,7 @@ public class ExtractArchiveTest {
    @Test
    @Parameters(method = "paramsToTestExtractMasterFile")
    public void testExtractMasterFile(String omexTestFilePath, boolean hasMasterFile, String format,
-                                     boolean masterFile) throws Exception {
+                                     boolean masterFile, String origFilePath) throws Exception {
       setUp(omexTestFilePath);
       boolean res = archive.isOpen();
       assertEquals(true, res);
@@ -97,7 +97,15 @@ public class ExtractArchiveTest {
       assertEquals(masterFile, stream != null);
       File file = archive.writeMasterFile();
       if (file != null) {
-         System.out.println(file.getAbsolutePath());
+         File origFile = pickTestOmexFile(origFilePath);
+         boolean areTwoFilesEqual = FileUtils.contentEquals(origFile, file);
+         assertTrue(areTwoFilesEqual);
+         // clean
+         try {
+            Files.delete(file.toPath());
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }
    }
 
@@ -113,9 +121,12 @@ public class ExtractArchiveTest {
 
    private Object[] paramsToTestExtractMasterFile() {
       return new Object[] {
-         new Object[] {BIOMD0000001000_OMEX, false, "", false} /* this OMEX file does not declare a master attribute */,
-         new Object[] {MODEL2012220003_OMEX, true, "https://identifiers.org/combine.specifications/sbml.level-3.version-1", true},
-         new Object[] {iAB_AMO1410_SARS_CoV2_OMEX, true, "https://identifiers.org/combine.specifications/sbml.level-3.version-1", true},
+         /* the OMEX file below does not declare a master attribute */
+         new Object[] {BIOMD0000001000_OMEX, false, "", false, "omex_files/BIOMD0000001000/MODEL1712050009.xml"},
+         new Object[] {MODEL2012220003_OMEX, true, "https://identifiers.org/combine.specifications/sbml.level-3" +
+                 ".version-1", true, "omex_files/MODEL2012220003/iDPM21RW.xml"},
+         new Object[] {iAB_AMO1410_SARS_CoV2_OMEX, true, "https://identifiers.org/combine.specifications/sbml.level-3" +
+                 ".version-1", true, "omex_files/iAB_AMO1410_SARS-CoV-2/iAB_AMO1410_SARS-CoV-2.xml"},
       };
    }
    private Object[] paramsToTestFindMasterFile() {
