@@ -15,7 +15,7 @@
 
 package org.mbine.co.archive;
 
-import org.apache.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * @author Stuart Moodie
