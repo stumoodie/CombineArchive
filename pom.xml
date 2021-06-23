@@ -6,7 +6,7 @@
 
     <groupId>org.mbine.co</groupId>
     <artifactId>libCombineArchive</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -88,16 +88,21 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-core</artifactId>
-            <version>3.16.0</version>
-            <scope>runtime</scope>
+            <groupId>com.hp.hpl.jena</groupId>
+            <artifactId>jena</artifactId>
+            <version>2.6.4</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-iri</artifactId>
-            <version>4.0.0</version>
-            <scope>runtime</scope>
+            <groupId>com.hp.hpl.jena</groupId>
+            <artifactId>iri</artifactId>
+            <version>0.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

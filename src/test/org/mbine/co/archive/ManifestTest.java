@@ -15,15 +15,8 @@
 
 package org.mbine.co.archive;
 
-import org.mbine.co.archive.IManifestManager;
-import org.mbine.co.archive.ManifestManager;
-
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Iterator;
 
