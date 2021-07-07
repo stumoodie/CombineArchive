@@ -15,14 +15,13 @@
 
 package org.mbine.co.archive;
 
-import javafx.util.Pair;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * 
@@ -40,7 +39,7 @@ public interface ICombineArchive extends AutoCloseable {
 	 *
 	 * @return A pair of a string as the format and an InputStream object as the content of the master file
 	 */
-	Pair<String, InputStream> getMasterFile();
+	Map.Entry<String, InputStream> getMasterFile();
 
 	/**
 	 * Check the archive has a master or not
