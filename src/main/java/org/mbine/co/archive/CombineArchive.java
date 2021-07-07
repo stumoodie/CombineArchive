@@ -15,7 +15,6 @@
 
 package org.mbine.co.archive;
 
-import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -68,7 +67,7 @@ public class CombineArchive implements ICombineArchive {
 
 	@Override
 	public File writeMasterFile() throws IOException {
-		Pair<String, InputStream> masterFile = getMasterFile();
+		Map.Entry<String, InputStream> masterFile = getMasterFile();
 		Path tmpFile = Files.createTempFile("omex-master-file", "");
 		if (masterFile.getKey() != "" && masterFile.getValue() != null) {
 			InputStream stream = masterFile.getValue();
@@ -221,17 +220,17 @@ public class CombineArchive implements ICombineArchive {
 	}
 
 	@Override
-	public Pair<String, InputStream> getMasterFile() {
+	public Map.Entry<String, InputStream> getMasterFile() {
 		Iterator<ArtifactInfo> iterator = artifactIterator();
 		boolean foundMasterFile = false;
-		Pair<String, InputStream> tmp = new Pair<>("", null);
+		Map.Entry<String, InputStream> tmp = new AbstractMap.SimpleEntry<>("", null);
 		while (!foundMasterFile && iterator.hasNext()) {
 			ArtifactInfo artifactInfo = iterator.next();
 			foundMasterFile = artifactInfo.isMaster();
 			if (foundMasterFile) {
 				String format = artifactInfo.getFormat();
 				InputStream stream = readArtifact(artifactInfo);
-				tmp = new Pair<>(format, stream);
+				tmp = new AbstractMap.SimpleEntry<>(format, stream);
 			}
 		}
 		return tmp;
