@@ -1,6 +1,5 @@
 package org.mbine.co.archive;
 
-import javafx.util.Pair;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.io.FileUtils;
@@ -17,6 +16,7 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -90,7 +90,7 @@ public class ExtractArchiveTest {
       assertEquals(true, res);
       boolean hasMaster = archive.hasMasterFile();
       assertEquals(hasMasterFile, hasMaster);
-      Pair<String, InputStream> detectedMasterFile = archive.getMasterFile();
+      Map.Entry<String, InputStream> detectedMasterFile = archive.getMasterFile();
       String detectedFormat = detectedMasterFile.getKey();
       assertEquals(format, detectedFormat);
       InputStream stream = detectedMasterFile.getValue();
